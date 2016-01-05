@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_primary">#3f51b5</color>
+    <color name="theme_primary_dark">#303f9f</color>
+    <color name="theme_primary_light">#7986cb</color>
+    <color name="app_color1">#7c4dff</color>
+    <color name="app_color_light1">#707c4dff</color>
+    <color name="app_color2">#69f0ae</color>
+    <color name="app_color_light2">#7069f0ae</color>
+    <color name="app">#00D6C7</color>
+        <color name="app_color">#454567</color>
+    <color name="app_color_light">#90454567</color>
+        <color name="colorPrimaryDark">#01579B</color>
+        <color name="textColorPrimary">#FFFFFF</color>
+        <color name="textColorFloat">#99FFFFFF</color>
+        <color name="windowBackground">#F5F5F5</color>
+        <color name="colorPrimary">#0277bd</color>
+        <color name="blue">#00abea</color>
+        <color name="white">#ffffff</color>
+        <color name="blue_clair">#90CAF9</color>
+        <color name="default_background_color">#00abea</color>
+        <color name="title">#00abea</color>
+        <color name="hint">#4DC435</color>
+        <color name="default_evernote_background">#313332</color>
+        <color name="evernote_title">#ffffff</color>
+        <color name="evernote_linebutton">#333534</color>
+        <color name="evernote_list_divider">#333534</color>
+        <color name="evernote_footer">#2c2c2c</color>
+        <color name="evernote_footer_text">#5b5b5c</color>
+        <color name="evernote_button_pressed">#9eb39b</color>
+        <color name="evernote_button_bkg">#464847</color>
+        <color name="color_accent">#7c4dff</color>
+        <color name="color_success1">#3CCD88</color>
+    <color name="color_success">#349D88</color>
+
+    <color name="gris">#757575</color>
+    <color name="gris_background">#AEACAC</color>
+    <color name="psts_background_tab_pressed">#1AFFFFFF</color>
+    <color name="background_window">#FFE5E5E5</color>
+    <color name="green">#689F38</color>
+    <color name="greenDark">#3E5F22</color>
+    <color name="red_light">#10fc0000</color>
+    <color name="red">#90fc0000</color>
+
+</resources>

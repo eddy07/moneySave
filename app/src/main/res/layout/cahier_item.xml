@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the parent view - provides the gray listfragment background color -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:orientation="vertical"
+    android:background="@drawable/frame1"
+    android:gravity="top">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp">
+
+            <TextView
+                android:id="@+id/nom_cahier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8sp"
+                android:typeface="normal"
+                android:text=""
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:textStyle="bold"
+                android:textSize="14dp"
+                android:maxLines="3"
+                android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
+                android:textColor="@color/evernote_footer_text"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/l2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true">
+            <TextView
+                android:id="@+id/description_tontine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nom_tontine"
+                android:paddingLeft="10dp"
+                android:gravity="left"
+                android:typeface="serif"
+                android:textStyle="italic"
+                android:text=""
+                android:layout_alignParentTop="true"
+                android:maxLines="3"
+                android:textColor="@color/gris"
+                android:textAppearance="@android:style/TextAppearance.Small.Inverse" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/l3"
+            android:layout_below="@+id/ligne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <!--<TextView
+                android:id="@+id/creation_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left|top"
+                android:typeface="serif"
+                android:textStyle="italic"
+                android:textAppearance="@android:style/TextAppearance.Small.Inverse"
+                android:text="cree le: jj/mm/aaaa"
+                android:textColor="@color/gris"
+                />-->
+            <TextView
+                android:id="@+id/session_statu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:typeface="normal"
+                android:gravity="right|top"
+                android:textSize="10dp"
+                android:textStyle="italic|bold"
+                android:text=""
+                android:textColor="@color/app_color"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

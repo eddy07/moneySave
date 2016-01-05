@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.parse.app.CompteActivity"
+    android:id="@+id/setup_step1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/frame"
+            android:padding="20dp">
+            <TextView
+                android:id="@+id/textSMSInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/app_color"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:padding="10dp"
+                android:text="Solde du compte MTN Mobile Money"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="@color/app_color"
+                android:layout_marginBottom="20dp"/>
+
+            <LinearLayout
+                android:id="@+id/formPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/montant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="21654"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:textColor="@color/evernote_footer_text"
+                    android:layout_marginRight="15dp" />
+                <TextView
+                    android:id="@+id/phoneIndicatorSign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FCFA"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:textColor="@color/evernote_footer_text"
+                    android:singleLine="true"></TextView>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,81 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_container_broadcast"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="com.parse.app.MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView android:id="@+id/listviewTontine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:stackFromBottom="false"
+            android:animateLayoutChanges="false"/>
+        <!--<com.gc.materialdesign.views.ButtonFloat
+            android:id="@+id/adButton"
+            android:layout_height="56dp"
+            android:layout_width="56dp"
+            android:clickable="true"
+            android:padding="20dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/add_fab">
+        </com.gc.materialdesign.views.ButtonFloat>-->
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_action_new"
+            fab:fab_colorNormal="@color/app_color"
+            fab:fab_colorPressed="@color/app_color_light"
+            fab:fab_colorRipple="@color/app_color" />
+
+        <ScrollView
+            android:id="@+id/emptyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/progress_wheel"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                wheel:matProg_barColor="#90454567"
+                wheel:matProg_progressIndeterminate="true" />
+            <TextView
+                android:id="@+id/textNoMesTontine"
+                android:text="@string/empty_list"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="7dp"
+                android:textSize="14sp"
+                android:textColor="@color/gris"
+                android:gravity="center">
+
+            </TextView>
+        </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
+

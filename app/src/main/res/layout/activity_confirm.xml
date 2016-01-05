@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.djangui.app.ConfirmActivity"
+    android:id="@+id/setup_step1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/frame"
+        android:padding="20dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sms_wait_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="3dp"
+            android:layout_marginBottom="15dp"
+            android:text="@string/sms_wait_code"
+            android:textSize="15sp"/>
+
+
+        <LinearLayout
+            android:id="@+id/formPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+
+            <EditText
+                android:id="@+id/code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Code"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/evernote_footer"
+                android:singleLine="true">
+            </EditText>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_container_broadcast"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="com.parse.app.MainActivity" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView android:id="@+id/listviewDiscussion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:stackFromBottom="false"
+            android:animateLayoutChanges="false"/>
+
+        <ScrollView
+            android:id="@+id/emptyListDiscussion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textNoLive"
+                android:text="Ce module n'est pas encore activé!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:padding="50dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/background_material_dark"
+                android:gravity="center">
+
+            </TextView>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+
+</RelativeLayout>
+

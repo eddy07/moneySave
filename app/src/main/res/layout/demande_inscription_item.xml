@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the parent view - provides the gray listfragment background color -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:orientation="vertical"
+    android:background="@drawable/frame1"
+    android:gravity="top">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp">
+            <!--<TextView
+                android:id="@+id/statu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:typeface="normal"
+                android:textStyle="italic"
+                android:text="statu"
+                android:gravity="right"
+                android:textSize="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="10dp"
+                android:textColor="@color/app_color"/>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <TextView
+                android:id="@+id/nom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:text="Nom"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:textSize="15dp"
+                android:textColor="@color/evernote_footer_text"
+                android:textAppearance="@android:style/TextAppearance.Medium.Inverse" />
+
+                <TextView
+                    android:id="@+id/montant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_marginTop="-27dp"
+                    android:textColorHint="@color/gris_background"
+                    android:textColor="@color/evernote_footer_text"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold|italic"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+</RelativeLayout>
+
+</RelativeLayout>

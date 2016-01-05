@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the parent view - provides the gray listfragment background color -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/bg_membre"
+    android:gravity="top"
+    android:padding="2dp">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_marginTop="0dp">
+            <ImageView
+                android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:gravity="left"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="10dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/personbluedark"/>
+
+            <TextView
+                android:id="@+id/nom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:layout_marginRight="60dp"
+                android:layout_marginLeft="70dp"
+                android:layout_gravity="center"
+                android:gravity="left|center"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:text="Nom"
+                android:maxLines="2"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="12dp"
+                android:textSize="16dp"
+                android:textColor="@color/evernote_footer_text"/>
+            <TextView
+                android:id="@+id/fonction"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="70dp"
+                android:layout_gravity="center"
+                android:gravity="left|bottom"
+                android:text="fonction"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="33dp"
+                android:textSize="14dp"
+                android:textColor="@color/blue"/>
+            <ImageButton
+                android:id="@+id/create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:background="@color/white"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="200dp"
+                android:src="@drawable/ic_action_send_now"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/app_color_light"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="79.8dp"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/titre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Titre... "
+                    android:layout_marginTop="15dp"
+                    android:padding="10dp"
+                    android:maxLines="2"
+                    android:textColor="@color/app_color"
+                    android:textColorHint="@color/app_color_light"
+                    android:layout_marginRight="40dp"
+                    android:inputType="text"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:background="@drawable/text_layout_style"
+                    android:layout_marginLeft="10dp"/>
+                <com.pnikosis.materialishprogress.ProgressWheel
+                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/progress_wheel"
+                    android:visibility="gone"
+                    android:layout_marginTop="-30dp"
+                    android:layout_width="20dp"
+                    android:layout_marginLeft="260dp"
+                    android:layout_height="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    wheel:matProg_barColor="@color/app_color_light"
+                    wheel:matProg_progressIndeterminate="true" />
+                <EditText
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Entrer votre message... "
+                    android:layout_marginTop="15dp"
+                    android:padding="10dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/app_color"
+                    android:textColorHint="@color/app_color_light"
+                    android:layout_marginRight="10dp"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/text_layout_style"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/vispresi"
+        android:title="Vice president"
+        android:onClick="setVicePresident"/>
+    <item android:id="@+id/secretaire"
+        android:title="Secretaire"
+        android:onClick="setSecretaire"/>
+    <item android:id="@+id/tresorier"
+        android:title="Trésorier"
+        android:onClick="setTresorier"/>
+    <item android:id="@+id/autre"
+        android:title="Autre"
+        android:onClick="setAutre"/>
+</menu>

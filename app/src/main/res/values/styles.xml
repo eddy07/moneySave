@@ -1,0 +1,127 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/app_color</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="actionBarDivider">@null</item>
+        <item name="showDividers">none</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:editTextColor">@color/app_color</item>
+        <item name="actionBarTabBarStyle">@style/ActionBarTab</item>
+        <!--<item name="actionBarTabStyle">@style/ActionBarTabStyle</item>-->
+        <item name="android:subtitle">@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
+        <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+    <style name="dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="floatlabelededittext">
+        <item name="android:textColor">#FF0000</item>
+    </style>
+    <style name="edit" parent="android:TextAppearance.Holo.Widget.EditText">
+        <item name="android:editTextBackground">@color/app_color</item>
+        <item name="android:editTextColor">@color/evernote_footer_text</item>
+        <item name="colorAccent">@color/app_color</item>
+        <item name="android:colorFocusedHighlight">#20009e0f</item>
+        <item name="android:textColorHint">@color/evernote_button_pressed</item>
+        <item name="android:textColorPrimary">@color/evernote_footer_text</item>
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+
+    </style>
+    <style name="ActionBarTabStyle" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_djangui</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle" parent="AppTheme">
+        <item name="android:textSize">12dp</item>
+
+    </style>
+    <style name="Widget.MyApp.HeaderBar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="background">?android:selectableItemBackground</item>
+        <item name="android:textColor">@color/evernote_footer_text</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:textColorPrimary">@color/evernote_button_bkg</item>
+        <item name="divider">@null</item>
+
+        <item name="overlapAnchor">true</item>
+    </style>
+    <style name="mySpinner" parent="@android:style/Widget.Spinner.DropDown">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="divider">@null</item>
+        <item name="overlapAnchor">true</item>
+    </style>
+
+    <style name="ActionBarTab">
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="themeprofile" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/gris</item>
+        <item name="colorPrimaryDark">@color/gris</item>
+        <item name="colorAccent">@color/gris</item>
+        <item name="actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="actionBarDivider">@null</item>
+        <item name="showDividers">none</item>
+        <item name="android:textColorPrimary">@color/gris</item>
+        <item name="android:textColor">@color/gris</item>
+        <item name="android:editTextColor">@color/gris</item>
+        <item name="actionBarTabBarStyle">@style/ActionBarTab</item>
+        <!--<item name="actionBarTabStyle">@style/ActionBarTabStyle</item>-->
+        <item name="android:subtitle">@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
+        <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+    <style name="theme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/app_color</item>
+        <item name="colorAccent">@color/app_color</item>
+        <item name="actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="actionBarDivider">@null</item>
+        <item name="showDividers">none</item>
+        <item name="android:textColorPrimary">@color/app_color</item>
+        <item name="android:editTextColor">@color/app_color</item>
+        <item name="actionBarTabBarStyle">@style/ActionBarTab</item>
+        <!--<item name="actionBarTabStyle">@style/ActionBarTabStyle</item>-->
+        <item name="android:subtitle">@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
+        <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+    <style name="mytheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="actionBarDivider">@null</item>
+        <item name="showDividers">none</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+        <item name="actionBarTabBarStyle">@style/ActionBarTab</item>
+        <!--<item name="actionBarTabStyle">@style/ActionBarTabStyle</item>-->
+        <item name="android:subtitle">@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
+        <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+    <style name="passwordreset" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">@color/evernote_button_bkg</item>
+    </style>
+
+</resources>

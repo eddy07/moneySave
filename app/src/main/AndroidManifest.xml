@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.parse.app" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/mytheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TontineActivity"
+            android:label="@string/title_activity_tontine"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".DemandeSoutientActivity"
+            android:parentActivityName=".SessionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SessionActivity" />
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity android:name=".ConfirmActivity" >
+        </activity>
+        <activity
+            android:name=".CompteActivity"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainActivity" />
+        </activity>
+
+        <service android:name="com.parse.PushService" />
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcast_receiver.NotificationReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".AnnonceActivity"
+            android:parentActivityName=".MainTontineActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SessionActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".WelcomeActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.WelcomeActivity" />
+        </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:parentActivityName=".WelcomeActivity"
+            android:theme="@style/mytheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.WelcomeActivity" />
+        </activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:parentActivityName=".SessionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SessionActivity" />
+        </activity>
+        <activity
+            android:name=".InfoTontineActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SessionActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MainTontineActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainActivity" />
+        </activity>
+        <activity
+            android:name=".CreerSessionActivity"
+            android:parentActivityName=".SessionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SessionActivity" />
+        </activity>
+        <activity
+            android:name=".CotiserActivity"
+            android:parentActivityName=".TontineActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.TontineActivity" />
+        </activity>
+        <activity
+            android:name=".InfoSessionActivity"
+            android:parentActivityName=".SessionActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SessionActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainActivity" />
+        </activity>
+        <activity
+            android:name=".FeedBackActivity"
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".UpdateProfileActivity"
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".CreerAnnonceActivity"
+            android:theme="@style/dialog" >
+        </activity>
+        <activity
+            android:name=".AjoutMembre"
+            android:parentActivityName=".ListMembreActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.ListMembreActivity" />
+        </activity>
+        <activity
+            android:name=".ListMembreActivity"
+            android:parentActivityName=".SessionActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SessionActivity" />
+        </activity>
+        <activity
+            android:name=".MyProfile"
+            android:label="@string/title_activity_my_profile"
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/themeprofile" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".CreerTontine1"
+            android:theme="@style/mytheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainActivity" />
+        </activity>
+        <activity
+            android:name=".CreerTontineAmande"
+            android:label="@string/title_activity_creer_tontine_amande" >
+        </activity>
+        <activity
+            android:name=".CreerTontine2"
+            android:label="@string/title_activity_creer_tontine2"
+            android:theme="@style/theme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.CreerTontine1" />
+        </activity>
+        <activity
+            android:name=".ListAnnonce"
+            android:theme="@style/theme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainTontineActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterStep2"
+            android:theme="@style/mytheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.RegisterStep1" />
+        </activity>
+        <activity
+            android:name=".RegisterStep1"
+            android:theme="@style/mytheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.LoginActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterFinalStep"
+            android:theme="@style/mytheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.RegisterStep2" />
+        </activity>
+        <activity
+            android:name=".TontineSetting"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".TontinerActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".InscriptionActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:theme="@style/dialog" >
+        </activity>
+        <activity
+            android:name=".MembreProfile"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".CheckCahierActivity"
+            android:label="@string/title_activity_check_cahier" >
+        </activity>
+    </application>
+
+</manifest>

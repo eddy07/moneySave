@@ -1,0 +1,78 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.parse.app.WelcomeActivity">
+
+   <LinearLayout
+    android:id="@+id/blockapp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+       android:layout_gravity="center|top"
+    android:background="@color/color_success"
+    >
+  <TextView
+      android:id="@+id/app"
+      android:layout_width="183dp"
+      android:layout_height="wrap_content"
+      android:text="idjangui"
+      android:textColor="@color/white"
+      android:layout_gravity="center"
+      android:layout_marginTop="30dp"
+      android:textSize="40dp"
+      android:gravity="center" />
+
+</LinearLayout>
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/blockdescr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="120dp"
+            android:orientation="vertical"
+            android:background="@drawable/frame1"
+            >
+        </LinearLayout>
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/blocLog"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/blockdescr"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+                <Button
+                    android:id="@+id/loginBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_style"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:text="@string/login"
+                    android:layout_weight="0.49" />
+
+                <Button
+                    android:id="@+id/registerBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_style"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="@string/register"
+                    android:layout_weight="0.49" />
+
+</LinearLayout>
+
+</FrameLayout>

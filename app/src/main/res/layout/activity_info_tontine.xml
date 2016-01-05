@@ -1,0 +1,217 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="?android:actionBarSize"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/blockName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/frame">
+        <TextView
+            android:id="@+id/labelNom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nom de la Tontine"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:padding="15dp"
+            android:textColor="@color/app_color"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/evernote_button_pressed">
+
+            </View>
+        <TextView
+            android:id="@+id/nomtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/evernote_footer_text"
+            android:textSize="13dp"
+            android:padding="15dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/blocktype"
+        android:layout_below="@+id/blockName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/frame">
+        <TextView
+            android:id="@+id/labelType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Type"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:padding="15dp"
+            android:textColor="@color/app_color"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/evernote_button_pressed">
+
+        </View>
+        <TextView
+            android:id="@+id/typetext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/evernote_footer_text"
+            android:textSize="13dp"
+            android:padding="15dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/blockAmande"
+        android:layout_below="@+id/blockville"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/frame">
+        <TextView
+            android:id="@+id/labelAmande"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gere les amandes?"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:padding="15dp"
+            android:textColor="@color/app_color"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/evernote_button_pressed">
+
+        </View>
+        <TextView
+            android:id="@+id/amandetext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/evernote_footer_text"
+            android:textSize="13dp"
+            android:padding="15dp"/>
+
+    </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/blockJourTontine"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelJour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Jour de tontine"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+
+                <TextView
+                    android:id="@+id/jour_tontinetext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/blockDescription"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:id="@+id/descriptiontext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/blockrejoindre"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Rejoindre la Tontine"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="12dp"
+                    android:textStyle="normal"
+                    android:text="Vous souhaitez rejoindre notre tontine? Envoyez nous votre demande en clicquant sur le boutton ci-dessous!"
+                    android:padding="10dp"/>
+                <TextView
+                    android:id="@+id/btnInvite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_invite"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:text="rejoindre"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,86 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.parse.app.WelcomeActivity">
+
+    <LinearLayout
+        android:id="@+id/blockapp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center|top"
+        android:background="@color/material_blue_grey_800"
+        >
+        <TextView
+            android:id="@+id/app"
+            android:layout_width="183dp"
+            android:layout_height="wrap_content"
+            android:text="iDjangui"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:textSize="40dp"
+            android:gravity="center" />
+        <TextView
+            android:id="@+id/appDes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ma tontine mobile !"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="16dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/blockdescr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="120dp"
+            android:orientation="vertical"
+            android:background="@drawable/frame1">
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TableLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:stretchColumns="0,1"
+        android:layout_gravity="bottom">
+        <TableRow android:id="@+id/tableRow2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            <Button
+                android:id="@+id/loginBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button_appreciate_bad"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="@android:color/white"
+                android:textStyle="normal"
+                android:text="Connexion" />
+
+            <Button
+                android:id="@+id/registerBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button_appreciate_bad"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="@android:color/white"
+                android:textStyle="normal"
+                android:text="Inscription" />
+
+        </TableRow>
+    </TableLayout>
+</FrameLayout>
