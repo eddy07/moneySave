@@ -61,6 +61,8 @@ public class MembreListAdapter extends ArrayAdapter<Membre>{
             final ImageView user = (ImageView) rowView.findViewById(R.id.user);
             final Membre membre = values.get(position);
             user.setImageDrawable(a.getResources().getDrawable(R.drawable.user));
+            setFontNom(nom);
+            setFontFonction(fonction);
             membre.fetchIfNeededInBackground(new GetCallback<Membre>() {
                 @Override
                 public void done(Membre m, ParseException e) {
@@ -68,33 +70,18 @@ public class MembreListAdapter extends ArrayAdapter<Membre>{
                     adherant.fetchIfNeededInBackground(new GetCallback<ParseUser>() {
                         @Override
                         public void done(final ParseUser user, ParseException e) {
-                            if(user.getUsername().equals(ParseUser.getCurrentUser().getUsername())){
+                            fonction.setVisibility(View.VISIBLE);
+                            if (user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
                                 nom.setText("Moi");
-                                fonction.setVisibility(View.VISIBLE);
-                                fonction.setText("President");
 
-                            }else{
-                                nom.setText(user.getString("nom")+" "+user.getString("prenom"));
-                                ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
-                                tontineParseQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
-                                    @Override
-                                    public void done(Tontine tontine, ParseException e) {
-                                        if(user.getString("pseudo").equals(tontine.getPresident().getString("speudo"))){
-
-                                        }else{
-                                            fonction.setVisibility(View.GONE);
-                                        }
-                                    }
-                                });
+                            } else {
+                                nom.setText(user.getString("nom") + " " + user.getString("prenom"));
                             }
-                            setFontNom(nom);
-                            setFontFonction(fonction);
-
+                            fonction.setText(user.getString("fonction"));
                         }
                     });
                 }
             });
-
 
             return rowView;
 	    }

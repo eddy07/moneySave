@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -34,4 +35,7 @@ public class Annonce extends ParseObject{
     public String getStatu(){return getString("statu");}
     public void setAccept(boolean accept){put("accept", accept);}
     public boolean getAccept(){return getBoolean("accept");}
+    public ParseQuery<Annonce> getQuery(){
+        return ParseQuery.getQuery(Annonce.class);
+    }
 }

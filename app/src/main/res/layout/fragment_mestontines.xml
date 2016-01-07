@@ -15,7 +15,8 @@
         <ListView android:id="@+id/listviewTontine"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="0dp"
             android:stackFromBottom="false"
             android:animateLayoutChanges="false"/>
         <!--<com.gc.materialdesign.views.ButtonFloat
@@ -35,15 +36,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_action_new"
+            android:src="@drawable/ic_add_white_24dp"
             fab:fab_colorNormal="@color/app_color"
-            fab:fab_colorPressed="@color/app_color_light"
-            fab:fab_colorRipple="@color/app_color" />
+            fab:fab_colorPressed="@color/app_color_light" />
 
         <ScrollView
             android:id="@+id/emptyList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

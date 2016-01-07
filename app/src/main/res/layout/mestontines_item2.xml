@@ -2,8 +2,8 @@
 <!-- the parent view - provides the gray listfragment background color -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="95dp"
-    android:paddingTop="20dp"
+    android:layout_height="80dp"
+    android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:paddingLeft="10dp"
     android:layout_gravity="top"
@@ -28,7 +28,6 @@
             android:layout_marginBottom="5dp">
             <TextView
                 android:id="@+id/icon"
-                android:background="@drawable/fab"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text=""
@@ -39,6 +38,7 @@
                 android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:paddingRight="15dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:contentDescription="@string/logo_tontine"
                 />
@@ -48,9 +48,9 @@
                 android:layout_height="wrap_content"
                 android:padding="8sp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
                 android:typeface="normal"
-                android:layout_marginTop="-60dp"
+                android:layout_marginTop="-50dp"
                 android:text=""
                 android:layout_alignParentTop="true"
                 android:textStyle="bold"
@@ -64,12 +64,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:visibility="gone"
             android:layout_marginRight="30dp"
             android:layout_marginTop="-25dp"
             android:layout_marginLeft="60dp"
             android:layout_alignParentRight="true">
             <TextView
                 android:id="@+id/description_tontine"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nom_tontine"

@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -18,4 +19,7 @@ public class Cahier extends ParseObject{
     public void setAmande(Integer amande){put("amande",amande);}
     public void setCreated(String createdAt){put("date_creation", createdAt);}
     public String getCreated(){return getString("date_creation");}
+    public ParseQuery<Cahier> getQuery(){
+        return ParseQuery.getQuery(Cahier.class);
+    }
 }

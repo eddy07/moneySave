@@ -92,5 +92,6 @@
     <string name="title_activity_inscription">InscriptionActivity</string>
     <string name="title_activity_change_password">ChangePasswordActivity</string>
     <string name="title_activity_check_cahier">CheckCahierActivity</string>
+    <string name="title_activity_floating_menus">FloatingMenusActivity</string>
 
 </resources>

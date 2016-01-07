@@ -18,6 +18,42 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionBarOverlay">true</item>
     </style>
+    <style name="AjoutMembreTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/app_color</item>
+        <item name="colorAccent">@color/gris</item>
+        <item name="actionMenuTextColor">@color/gris</item>
+        <item name="actionBarDivider">@null</item>
+        <item name="showDividers">none</item>
+        <item name="android:textColorPrimary">@color/gris</item>
+        <item name="android:editTextColor">@color/app_color</item>
+        <item name="actionBarTabBarStyle">@style/ActionBarTab</item>
+        <!--<item name="actionBarTabStyle">@style/ActionBarTabStyle</item>-->
+        <item name="android:subtitle">@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
+        <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+    <style name="MembreTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/gris</item>
+        <item name="colorPrimaryDark">@color/gris</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="actionBarDivider">@null</item>
+        <item name="showDividers">none</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:editTextColor">@color/gris</item>
+        <item name="actionBarTabBarStyle">@style/ActionBarTab</item>
+        <!--<item name="actionBarTabStyle">@style/ActionBarTabStyle</item>-->
+        <item name="android:subtitle">@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
+        <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
     <style name="dialog" parent="Theme.AppCompat.Light.Dialog">
         <!-- Customize your theme here. -->
     </style>
@@ -83,6 +119,36 @@
         <item name="android:dropDownSpinnerStyle">@style/Widget.MyApp.HeaderBar.Spinner</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionBarOverlay">true</item>
+    </style>
+    <style name="MenuLabelsStyle">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MenuButtonsStyle">
+        <item name="fab_size">mini</item>
+        <item name="fab_showAnimation">@anim/jump_from_down</item>
+        <item name="fab_hideAnimation">@anim/jump_to_down</item>
+        <item name="fab_shadowColor">#444</item>
+        <item name="fab_colorNormal">#FFB805</item>
+        <item name="fab_colorPressed">#F2AB00</item>
+        <item name="fab_colorRipple">#D99200</item>
+    </style>
+
+    <style name="MenuButtonsSmall">
+        <item name="fab_size">mini</item>
+        <item name="fab_colorNormal">#1565C0</item>
+        <item name="fab_colorPressed">#2272CD</item>
+        <item name="fab_colorRipple">#62B2FF</item>
+    </style>
+
+    <style name="MenuButtonsSmall.Green">
+        <item name="fab_colorNormal">#43A047</item>
+        <item name="fab_colorPressed">#2E7D32</item>
+        <item name="fab_colorRipple">#1B5E20</item>
     </style>
     <style name="theme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@color/background_window</item>

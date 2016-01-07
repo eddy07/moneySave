@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 /**
  * Created by Jeddy on 29/08/2015.
@@ -24,5 +25,8 @@ public class Compte extends ParseObject{
 
     public void setSolde(Integer montant) {
         put("solde",montant);
+    }
+    public ParseQuery<Compte> getQuery(){
+        return ParseQuery.getQuery(Compte.class);
     }
 }

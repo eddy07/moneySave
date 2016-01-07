@@ -1,10 +1,13 @@
 package com.parse.app;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -31,6 +34,7 @@ import com.parse.app.model.Annonce;
 import com.parse.app.model.Membre;
 import com.parse.app.model.Tontine;
 import com.parse.app.utilities.NetworkUtil;
+import com.parse.app.utilities.UIUtils;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
@@ -48,14 +52,17 @@ public class CreerAnnonceActivity extends ActionBarActivity {
     private SnackBar snackBar;
     private boolean status = false;
     private Tontine tontine;
+    private List<String> mailingList = new ArrayList<String>();
     private SendAnnonceAsyncTask sendAnnonceAsyncTask = null;
     private TextView mNom, mFonction;
+    private AlertDialog alertDialog;
     private ProgressWheel progressWheel;
     //private List<ParseUser> listeUsers = new ArrayList<ParseUser>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creer_annonce1);
+        alertDialog = UIUtils.getProgressDialog(this, R.layout.progress_dialog_loading);
         getSupportActionBar().hide();
         context = this;
         mTitre = (EditText)findViewById(R.id.titre);
@@ -65,15 +72,19 @@ public class CreerAnnonceActivity extends ActionBarActivity {
         mFonction = (TextView)findViewById(R.id.fonction);
         create = (ImageButton)findViewById(R.id.create);
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
+        //Toast.makeText(this,"tontine Id = " + tontineId,Toast.LENGTH_LONG).show();
         thisuser = ParseUser.getCurrentUser();
         mNom.setText(thisuser.getString("nom").concat(" ").concat(thisuser.getString("prenom")));
-        setFontLabel(mFonction,mNom);
+        //getEmailOfMembre(tontineId);
+
+//        setFontLabel(mFonction,mNom);
         setFontTitre(mTitre);
         setFontMessage(mMessage);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                creerannonce();
+                //creerannonce();
+                sendAnnonce();
             }
         });
     }
@@ -86,9 +97,18 @@ public class CreerAnnonceActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        Intent i = new Intent(this, AnnonceActivity.class);
+        final Intent i = new Intent(this, MainTontineActivity.class);
         if(tontineId != null) {
             i.putExtra("TONTINE_ID", tontineId);
+            ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
+            tontineParseQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
+                @Override
+                public void done(Tontine tontine, ParseException e) {
+                    if(e==null){
+                        i.putExtra("NOM", tontine.getNom());
+                    }
+                }
+            });
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(
@@ -122,6 +142,39 @@ public class CreerAnnonceActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void sendAnnonce() {
+        final String message = mMessage.getText().toString();
+        final String titre = mTitre.getText().toString();
+        if (!message.isEmpty() && !titre.isEmpty()) {
+            if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
+                snackBar(false, "noInternet");
+            } else {
+                alertDialog.show();
+                ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                tontineParseQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
+                    @Override
+                    public void done(Tontine tontine, ParseException e) {
+                        if(e==null){
+                            ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+                            membreParseQuery.whereEqualTo("tontine",tontine);
+                            membreParseQuery.findInBackground(new FindCallback<Membre>() {
+                                @Override
+                                public void done(List<Membre> membres, ParseException e) {
+                                    if(e==null){
+                                        for(Membre membre:membres){
+                                            mailingList.add(membre.getAdherant().getEmail().toString());
+                                        }
+                                        sendMessageGroup(titre,message,mailingList);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
+            }
+        }
+    }
     public void creerannonce(){
         final String message = mMessage.getText().toString();
         final String titre = mTitre.getText().toString();
@@ -217,6 +270,34 @@ public class CreerAnnonceActivity extends ActionBarActivity {
         }
 
         snackBar.show();
+    }
+
+    public void sendMessageGroup(String subject,String text,List<String> emails){
+        //Toast.makeText(getApplicationContext(),"mailingList Size = "+emails.size(),Toast.LENGTH_LONG).show();
+        Log.i("Send email group","");
+        String[] EMAILS = new String[10];
+        int i=0;
+        for(String email:emails){
+            EMAILS[i] = email;
+            i++;
+        }
+        Toast.makeText(getApplicationContext(),"mailingList Size = "+EMAILS[0],Toast.LENGTH_LONG).show();
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_CC, EMAILS[0]);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL,EMAILS[0]);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT,subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT,text);
+        try{
+            alertDialog.dismiss();
+            startActivity(Intent.createChooser(emailIntent,"Send mail..."));
+            finish();
+            Log.i("Finished sending email","");
+            //snackBar(true,null);
+        }catch (ActivityNotFoundException ex){
+           Toast.makeText(this,ex.getMessage(),Toast.LENGTH_LONG).show();
+        }
     }
     public void setFontTitre(TextView tv) {
         Typeface tf = Typeface.createFromAsset(tv.getContext().getAssets(), "fonts/Roboto-Regular.ttf");

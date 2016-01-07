@@ -54,6 +54,8 @@ public class MainTontineActivity extends ActionBarActivity implements ActionBar.
     private String nom;
     private boolean started;
     private String currDate;
+    private Receiver receiver;
+    private IntentFilter intentFilter;
     private SendAnnonceAsyncTask sendAnnonceAsyncTask;
     public static final int TYPE_NOT_CONNECTED = 0;
 
@@ -61,16 +63,15 @@ public class MainTontineActivity extends ActionBarActivity implements ActionBar.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Receiver receiver = new Receiver();
-        IntentFilter intentFilter = new IntentFilter(MyService.EVENT_ACTION);
-        registerReceiver(receiver, intentFilter);
         context = this;
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
         nom = getIntent().getExtras().getString("NOM");
         date = DateFormat.getDateTimeInstance().format(new Date());
-        getSupportActionBar().setTitle("Tontine");
-        getSupportActionBar().setSubtitle(nom);
+        getSupportActionBar().setTitle(nom);
         user = ParseUser.getCurrentUser();
+        receiver = new Receiver();
+        intentFilter = new IntentFilter(MyService.EVENT_ACTION);
+        registerReceiver(receiver, intentFilter);
         final ActionBar actionBar = getSupportActionBar();
         tabsPagerAdapter = new TabsTontinePagerAdapter(getSupportFragmentManager(), tontineId, currDate);
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -103,6 +104,12 @@ public class MainTontineActivity extends ActionBarActivity implements ActionBar.
         actionBar.addTab(tab, 0, false);
         actionBar.addTab(tab1, 1, false);
         actionBar.addTab(tab2, 2, false);
+        if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
+            noInternet();
+        } else {
+            storeUsersInLocalDataStore();
+            storeMembreInLocalDataStore();
+        }
 
     }
 
@@ -231,14 +238,23 @@ public class MainTontineActivity extends ActionBarActivity implements ActionBar.
             return true;
         }/*else if (id == R.id.action_settings) {
             parametresService();
-        }*/
+        }*/else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
 
         //noinspection SimplifiableIfStatement
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        // TODO Auto-generated method stub
+        Intent i = new Intent(this,MainActivity.class);
+        unregisterReceiver(receiver);
+        startActivity(i);
+    }
     public void cotiserService(){
         Intent i = new Intent(this, TontinerActivity.class);
         i.putExtra("TONTINE_ID", tontineId);
@@ -270,20 +286,37 @@ public class MainTontineActivity extends ActionBarActivity implements ActionBar.
 
     }
 
-    /*@Override
-    public void onBackPressed() {
-        // TODO Auto-generated method stub
-        Intent homeIntent = new Intent(this, MainActivity.class);
-        startActivity(homeIntent);
-    }*/
-
-    public void snackBar(){
-        snackbar = new SnackBar(this, "Erreur: veuillez rééssayer !", "", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    snackbar.dismiss();
-                }
-            });
+    public void noInternet(){
+        snackbar = new SnackBar(this,getResources().getString(R.string.no_internet), "Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
         snackbar.show();
     }
+
+    public void storeMembreInLocalDataStore(){
+        ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+        membreParseQuery.findInBackground(new FindCallback<Membre>() {
+            @Override
+            public void done(List<Membre> membres1, ParseException e) {
+                if(e==null){
+                    Membre.pinAllInBackground(membres1);
+                }
+
+            }
+        });
+    }
+
+    public void storeUsersInLocalDataStore(){
+        ParseQuery<ParseUser> parseUserParseQuery = ParseQuery.getQuery(ParseUser.class);
+        parseUserParseQuery.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> parseUsers, ParseException e) {
+                ParseUser.pinAllInBackground(parseUsers);
+            }
+        });
+    }
+
 }

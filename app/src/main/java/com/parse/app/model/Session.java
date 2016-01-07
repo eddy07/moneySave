@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -66,4 +67,7 @@ public class Session extends ParseObject {
     public Integer getMontantTotal(){return getInt("montant_total");}
     public void setTour(Integer numTour){ put("tour", numTour); }
     public Integer getTour(){ return  Integer.getInteger("tour"); }
+    public ParseQuery<Session> getQuery(){
+        return ParseQuery.getQuery(Session.class);
+    }
 }

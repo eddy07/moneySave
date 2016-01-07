@@ -128,10 +128,10 @@ public class SessionsFragment extends Fragment implements SwipeRefreshLayout.OnR
         if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
             //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
             //swipeLayout.setRefreshing(false);
-            loadSessionsFromLocalDataStore();
+            //loadSessionsFromLocalDataStore();
 
         } else {
-            ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery("Tontine");
+            ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
             tontineQuery.whereEqualTo("objectId", tontineId);
             tontineQuery.getFirstInBackground(new GetCallback<Tontine>() {
                 @Override

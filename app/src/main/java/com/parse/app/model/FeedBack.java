@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -14,4 +15,7 @@ public class FeedBack extends ParseObject{
     public void setMessage(String message){put("message",message);}
     public ParseUser getUser(){return getParseUser("user");}
     public void setUser(ParseUser user){put("user",user);}
+    public ParseQuery<FeedBack> getQuery(){
+        return ParseQuery.getQuery(FeedBack.class);
+    }
 }

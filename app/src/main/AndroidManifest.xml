@@ -183,15 +183,19 @@
         </activity>
         <activity
             android:name=".CreerAnnonceActivity"
-            android:theme="@style/dialog" >
+            android:theme="@style/dialog"
+            android:parentActivityName=".MainTontineActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainTontineActivity" />
         </activity>
         <activity
             android:name=".AjoutMembre"
-            android:parentActivityName=".ListMembreActivity"
-            android:theme="@style/AppTheme" >
+            android:parentActivityName=".MainTontineActivity"
+            android:theme="@style/AjoutMembreTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.parse.app.ListMembreActivity" />
+                android:value="com.parse.app.MainTontineActivity" />
         </activity>
         <activity
             android:name=".ListMembreActivity"
@@ -282,7 +286,10 @@
         </activity>
         <activity
             android:name=".MembreProfile"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/MembreTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainTontineActivity" />
         </activity>
         <activity
             android:name=".CheckCahierActivity"

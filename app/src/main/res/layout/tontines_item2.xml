@@ -2,10 +2,11 @@
 <!-- the parent view - provides the gray listfragment background color -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="95dp"
+    android:layout_height="80dp"
     android:layout_gravity="top"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:paddingLeft="10dp"
     android:background="@drawable/frame"
     android:gravity="top">
 
@@ -25,7 +26,6 @@
             android:layout_marginTop="0dp">
             <TextView
                 android:id="@+id/icon"
-                android:background="@drawable/fab"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text=""
@@ -36,6 +36,7 @@
                 android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:paddingRight="15dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:contentDescription="@string/logo_tontine"
                 />
@@ -46,9 +47,9 @@
                 android:layout_height="wrap_content"
                 android:padding="8sp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
                 android:typeface="normal"
-                android:layout_marginTop="-60dp"
+                android:layout_marginTop="-50dp"
                 android:text=""
                 android:layout_alignParentTop="true"
                 android:textStyle="bold"
@@ -62,14 +63,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="0dp"
-            android:layout_marginTop="-25dp"
+            android:layout_marginTop="0dp"
             android:layout_marginLeft="60dp"
             android:layout_alignParentRight="true">
             <TextView
                 android:id="@+id/description_tontine"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nom_tontine"
                 android:paddingLeft="10dp"
@@ -89,10 +91,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:typeface="normal"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="-2dp"
                     android:gravity="right|bottom"
                     android:textStyle="normal|italic"
-                    android:text=""
+                    android:text="12 membres"
                     android:textSize="10dp"
                     android:textColor="@color/gris"
                     />

@@ -1,9 +1,13 @@
 package fragment;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -13,16 +17,20 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gc.materialdesign.widgets.SnackBar;
-import com.melnykov.fab.FloatingActionButton;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.melnykov.fab.ScrollDirectionListener;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -30,6 +38,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.app.AjoutMembre;
+import com.parse.app.CreerAnnonceActivity;
+import com.parse.app.MainActivity;
 import com.parse.app.MembreProfile;
 import com.parse.app.R;
 import com.parse.app.adapter.MembreAdapter;
@@ -48,11 +59,17 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
 	private List<Membre> membres = new ArrayList<Membre>();
     private ListView listView;
     private MembreListAdapter adapter;
+    private int mPreviousVisibleItem;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+    private FloatingActionButton fab3;
+    private FloatingActionButton fabMenu;
     private SwipeRefreshLayout swipeLayout;
     private boolean reachedTop = true;
     private String tontineId;
     private Activity a;
     private TextView textNoMembre;
+    private String nom;
     private Context context;
     public static final int TYPE_NOT_CONNECTED = 0;
     private ProgressWheel progressWheel;
@@ -100,6 +117,7 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void done(Tontine tontine, ParseException e) {
                 if((e == null) && (tontine != null)){
+                    nom = tontine.getNom();
                     ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
                     membreQuery.whereEqualTo("tontine", tontine);
                     membreQuery.orderByAscending("date_inscription");
@@ -142,12 +160,14 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
     public void loadMembres(){
         if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            snackBar();
             swipeLayout.setRefreshing(false);
             //loadMembresFromLocalDataStore();
 
         } else {
-            ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery("Tontine");
+            //Toast.makeText(getActivity().getApplicationContext(), "TontineId = "+tontineId, Toast.LENGTH_SHORT).show();
+            ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
             tontineQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
@@ -175,6 +195,8 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         progressWheel.setVisibility(View.GONE);
                                         textNoMembre.setVisibility(View.GONE);
                                         listView.setAdapter(new MembreListAdapter(tontineId, context,a, membres));
+                                        System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+
                                     }
                                     swipeLayout.setRefreshing(false);
                                 } else {
@@ -182,6 +204,8 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     progressWheel.setVisibility(View.GONE);
                                     textNoMembre.setVisibility(View.VISIBLE);
                                     swipeLayout.setRefreshing(false);
+                                    System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
+
                                 }
                             }
                         });
@@ -189,6 +213,8 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         progressWheel.setVisibility(View.GONE);
                         textNoMembre.setVisibility(View.VISIBLE);
                         Log.d("Tontine", "error " + e.getMessage());
+                        System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+
                     }
                 }
             });
@@ -204,7 +230,7 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         } else {
             ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
-            tontineQuery.whereEqualTo("objectId", tontineId);
+            //tontineQuery.whereEqualTo("objectId", tontineId);
             tontineQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
@@ -230,12 +256,13 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
                                     swipeLayout.setRefreshing(false);
                                 }else{
+                                    System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
                                     swipeLayout.setRefreshing(false);
                                 }
                             }
                         });
                     }else{
-
+                        System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
                     }
                 }
             });
@@ -251,59 +278,36 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
         a = getActivity();
         listView = (ListView) rootView.findViewById(R.id.listviewMembre);
         progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
-        final FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        final FloatingActionMenu menu = (FloatingActionMenu) rootView.findViewById(R.id.menu);
+        //final FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) rootView.findViewById(R.id.fab_search_membre);
+        fab2 = (FloatingActionButton) rootView.findViewById(R.id.fab_message);
+        fab3 = (FloatingActionButton) rootView.findViewById(R.id.fab_add_membre);
+        fab1.setOnClickListener(clickListener);
+        fab2.setOnClickListener(clickListener);
+        fab3.setOnClickListener(clickListener);
         adapter = new MembreListAdapter(tontineId, getActivity().getApplicationContext(),a, membres);
         listView.setAdapter(adapter);
-        fab.attachToListView(listView, new ScrollDirectionListener() {
-            @Override
-            public void onScrollDown() {
-                Log.d("ListViewFragment", "onScrollDown()");
-                fab.show();
-            }
-
-            @Override
-            public void onScrollUp() {
-                Log.d("ListViewFragment", "onScrollUp()");
-                fab.hide();
-            }
-        }, new AbsListView.OnScrollListener() {
+        menu.setClosedOnTouchOutside(true);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                Log.d("ListViewFragment", "onScrollStateChanged()");
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.d("ListViewFragment", "onScroll()");
-                if (firstVisibleItem == 0) {
-                    // check if we reached the top or bottom of the list
-                    View v = listView.getChildAt(0);
-                    int offset = (v == null) ? 0 : v.getTop();
-                    if (offset == 0) {
-                        // reached the top:
-                        reachedTop = true;
-                        return;
-                    }
-                } else if (totalItemCount - visibleItemCount == firstVisibleItem){
-                    View v =  listView.getChildAt(totalItemCount-1);
-                    int offset = (v == null) ? 0 : v.getTop();
-                    if (offset == 0) {
-                        // reached the top:
-                        reachedTop = true;
-                        return;
-                    }
-                } else {
-                    reachedTop = false;
-                    return;
+                if (firstVisibleItem > mPreviousVisibleItem) {
+                    //fab.hide(true);
+                } else if (firstVisibleItem < mPreviousVisibleItem) {
+                    //fab.show(true);
                 }
+                mPreviousVisibleItem = firstVisibleItem;
             }
         });
-
         listView.setDividerHeight(0);
         adapter.notifyDataSetChanged();
         ScrollView emptyView = (ScrollView) rootView.findViewById(R.id.emptyList);
         listView.setEmptyView(emptyView);
-
         textNoMembre = (TextView) rootView.findViewById(R.id.textNoMembre);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
@@ -359,8 +363,13 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ParseUser user = membres.get(position).getAdherant();
                 Intent i = new Intent(getActivity(), MembreProfile.class);
                 i.putExtra("NOM", user.getString("nom").concat(" ").concat(user.getString("prenom")));
-                i.putExtra("TEL", user.getString("tel"));
+                i.putExtra("TEL", user.getString("phoneNumber"));
+                i.putExtra("NAME",nom);
+                i.putExtra("TONTINE_ID",tontineId);
                 i.putExtra("PROFESSION", user.getString("profession"));
+                i.putExtra("PSEUDO", user.getUsername());
+                i.putExtra("POSTE", membres.get(position).getString("fonction"));
+                i.putExtra("EMAIL", user.getEmail());
                 startActivity(i);
 
             }
@@ -400,4 +409,36 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return super.onOptionsItemSelected(menuItem);
     }
 
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String text = "";
+
+            switch (v.getId()) {
+                case R.id.fab_search_membre:
+                    text = fab1.getLabelText();
+                    break;
+                case R.id.fab_message:
+                    //text = fab2.getLabelText();
+                    startSendEmail(tontineId);
+                    break;
+                case R.id.fab_add_membre:
+                    text = fab3.getLabelText();
+                    startAddMembre(tontineId);
+                    break;
+            }
+
+        }
+    };
+
+    public void startSendEmail(String tontineId){
+        Intent i = new Intent(getActivity(), CreerAnnonceActivity.class);
+        i.putExtra("TONTINE_ID",tontineId);
+        startActivity(i);
+    }
+    public void startAddMembre(String tontineId){
+        Intent i = new Intent(getActivity(), AjoutMembre.class);
+        i.putExtra("TONTINE_ID",tontineId);
+        startActivity(i);
+    }
 }

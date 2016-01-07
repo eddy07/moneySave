@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -37,5 +38,8 @@ public class Membre extends ParseObject{
     }
     public String getFonction() {
         return getString("fonction");
+    }
+    public ParseQuery<Membre> getQuery(){
+        return ParseQuery.getQuery(Membre.class);
     }
 }

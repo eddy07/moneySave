@@ -5,7 +5,6 @@
     android:id="@+id/swipe_container_broadcast"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="18dp"
     android:background="@drawable/background">
 
     <FrameLayout
@@ -13,12 +12,70 @@
         android:layout_height="match_parent">
 
         <ListView android:id="@+id/listviewMembre"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:stackFromBottom="false"
             android:animateLayoutChanges="false"/>
-        <com.melnykov.fab.FloatingActionButton
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            fab:menu_labels_ellipsize="end"
+            fab:menu_labels_singleLine="true"
+            fab:menu_colorNormal="@color/app_color"
+            fab:menu_colorPressed="@color/app_color_light"
+            fab:menu_backgroundColor="@color/transparent"
+            fab:menu_fab_label="Menu">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_search_membre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_white_24dp"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/app_color"
+                fab:fab_colorPressed="@color/app_color_light"
+                fab:fab_label="Chercher un membre" />
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_message_white_24dp"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/app_color"
+                fab:fab_colorPressed="@color/app_color_light"
+                fab:fab_label="Message de groupe" />
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_add_membre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_person_add_white_24dp"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/app_color"
+                fab:fab_colorPressed="@color/app_color_light"
+                fab:fab_label="Ajouter un membre" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+        <!--<com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_action_new"
+            fab:fab_colorNormal="@color/app_color"
+            fab:fab_colorPressed="@color/app_color_light"
+            fab:fab_colorRipple="@color/app_color" />-->
+        <!--<com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,11 +84,12 @@
             android:src="@drawable/ic_action_add_person"
             fab:fab_colorNormal="@color/app_color"
             fab:fab_colorPressed="@color/app_color_light"
-            fab:fab_colorRipple="@color/app_color" />
+            fab:fab_colorRipple="@color/app_color" />-->
         <ScrollView
             android:id="@+id/emptyList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

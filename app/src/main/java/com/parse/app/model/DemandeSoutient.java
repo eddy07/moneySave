@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -33,5 +34,8 @@ public class DemandeSoutient extends ParseObject{
     }
     public void setTontine(Tontine tontine) {
         put("tontine", tontine);
+    }
+    public ParseQuery<DemandeSoutient> getQuery(){
+        return ParseQuery.getQuery(DemandeSoutient.class);
     }
 }

@@ -206,6 +206,7 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                 Tontine tontine = mItems.get(position);
                 Intent i = new Intent(getActivity().getApplicationContext(), MainTontineActivity.class);
                 if(tontine.getObjectId()!=null) {
+                    //Toast.makeText(getActivity().getApplicationContext(), "TontineIDClick = " + tontine.getObjectId(), Toast.LENGTH_SHORT).show();
                     i.putExtra("TONTINE_ID", tontine.getObjectId());
                     i.putExtra("NOM", tontine.getNom());
                     if (android.os.Build.VERSION.SDK_INT >= 16) {
@@ -385,6 +386,7 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                             textNoMesTontine.setVisibility(View.GONE);
                             progressWheel.setVisibility(View.GONE);
                             listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems));
+
                         }
                         else if (mItems.size()==0) {
                             MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems);
@@ -394,6 +396,7 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                             ta.notifyDataSetChanged();
                             System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
                             textNoMesTontine.setVisibility(View.VISIBLE);
+
                         }
                         swipeLayout.setRefreshing(false);
                     }else{
@@ -401,6 +404,7 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                         progressWheel.setVisibility(View.GONE);
                         textNoMesTontine.setVisibility(View.VISIBLE);
                         swipeLayout.setRefreshing(false);
+
                     }
 
                 }
@@ -431,6 +435,7 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                         mItems = membreTontines;
                         if(mItems.size()>0) {
                             listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems));
+
                         }
                         else if (mItems.size()==0) {
                             MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems);
@@ -438,6 +443,8 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                             listview.setAdapter(ta);
                             ta.notifyDataSetChanged();
                             System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+
+
                         }
                         swipeLayout.setRefreshing(false);
                     }else{
@@ -449,6 +456,17 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
             });
 
         }
+    }
+
+    public void setMarginBottonToCent(ListView listview){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0,0,0,100);
+        listview.setLayoutParams(params);
+    }
+    public void setMarginBottonToZero(ListView listview){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0,0,0,0);
+        listview.setLayoutParams(params);
     }
 
 

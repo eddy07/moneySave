@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="app_primary">#455A64</color>
+    <color name="app_primary_dark">#37474F</color>
     <color name="theme_primary">#3f51b5</color>
     <color name="theme_primary_dark">#303f9f</color>
     <color name="theme_primary_light">#7986cb</color>
@@ -32,7 +34,7 @@
         <color name="color_accent">#7c4dff</color>
         <color name="color_success1">#3CCD88</color>
     <color name="color_success">#349D88</color>
-
+    <color name="transparent">#70000000</color>
     <color name="gris">#757575</color>
     <color name="gris_background">#AEACAC</color>
     <color name="psts_background_tab_pressed">#1AFFFFFF</color>

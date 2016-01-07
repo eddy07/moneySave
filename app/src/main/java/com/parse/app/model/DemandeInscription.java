@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -52,6 +53,9 @@ public class DemandeInscription extends ParseObject{
     }
     public String getMessage() {
         return getString("message");
+    }
+    public ParseQuery<DemandeInscription> getQuery(){
+        return ParseQuery.getQuery(DemandeInscription.class);
     }
 }
 

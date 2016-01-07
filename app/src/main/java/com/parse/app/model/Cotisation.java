@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -47,5 +48,8 @@ public class Cotisation  extends ParseObject{
 
     public void setBeneficiaire(ParseUser beneficiaire) {
         put("beneficiaire",beneficiaire);
+    }
+    public ParseQuery<Cotisation> getQuery(){
+        return ParseQuery.getQuery(Cotisation.class);
     }
 }

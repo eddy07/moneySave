@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -28,5 +29,8 @@ public class Discussion extends ParseObject{
     }
     public void setSession(Session session){put("session", session);}
     public Session getSession(){return (Session)getParseObject("session");}
+    public ParseQuery<Discussion> getQuery(){
+        return ParseQuery.getQuery(Discussion.class);
+    }
 
 }

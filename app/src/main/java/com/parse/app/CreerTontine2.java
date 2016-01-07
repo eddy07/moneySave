@@ -1,5 +1,6 @@
 package com.parse.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.parse.app.model.Membre;
 import com.parse.app.model.Tontine;
 import com.parse.app.utilities.ImageIndicatorView;
 import com.parse.app.utilities.NetworkUtil;
+import com.parse.app.utilities.UIUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -47,18 +49,19 @@ public class CreerTontine2 extends ActionBarActivity implements View.OnClickList
     private String type;
     private String amande;
     private String tel;
-    private ProgressDialog progressDialog;
     private String nomTontine;
     private Context context;
     private String date;
     private ImageButton createBtn;
     private EditText montant;
     public static final int TYPE_NOT_CONNECTED = 0;
+    private AlertDialog alertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         thisuser = ParseUser.getCurrentUser();
+        alertDialog = UIUtils.getProgressDialog(this, R.layout.progress_dialog_creation);
         context = this;
         date = DateFormat.getDateTimeInstance().format(new Date());
         setContentView(R.layout.activity_creer_tontine3);
@@ -94,12 +97,6 @@ public class CreerTontine2 extends ActionBarActivity implements View.OnClickList
     }
 
 
-    public void initprogress(){
-        progressDialog  = new ProgressDialog(this);
-        progressDialog.setMessage("En cours de création ...");
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
-    }
     public void createTontine(String tel, String nomTontine, String type, String amande, final String date) {
         String description = mDescription.getText().toString();
         String jourCotisation = String.valueOf(spinner.getSelectedItem());
@@ -111,10 +108,9 @@ public class CreerTontine2 extends ActionBarActivity implements View.OnClickList
             final Tontine tontine = new Tontine();
             if (!nomTontine.isEmpty() && !jourCotisation.isEmpty() && !description.isEmpty() && !type.isEmpty() && !amande.isEmpty()) {
                 if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
-                    //Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                     erreurReseau();
                 } else {
-                    initprogress();
+                    alertDialog.show();
                     tontine.setNom(nomTontine);
                     tontine.setJourCotisation(jourCotisation);
                     tontine.setDescription(description);
@@ -168,6 +164,7 @@ public class CreerTontine2 extends ActionBarActivity implements View.OnClickList
                                 membre.setTontine(tontine);
                                 membre.setResponsable(thisuser);
                                 membre.setAdherant(thisuser);
+                                membre.setFonction("President");
                                 membre.setDateInscription(date);
                                 membre.pinInBackground();
                                 membre.saveInBackground(new SaveCallback() {
@@ -176,19 +173,19 @@ public class CreerTontine2 extends ActionBarActivity implements View.OnClickList
                                         if (e == null) {
                                             Log.d("membre", "successfully create membre.");
 
-                                            progressDialog.dismiss();
+                                            alertDialog.hide();
                                             Intent i = new Intent(context, MainActivity.class);
                                             startActivity(i);
 
                                         } else {
                                             Log.d("membre", "Fail to create membre." + e.getMessage());
-                                            progressDialog.dismiss();
+                                            alertDialog.hide();
                                         }
                                     }
                                 });
 
                             } else {
-                                progressDialog.dismiss();
+                                alertDialog.hide();
                                 Log.d("tontine", "Fail to create tontine." + e.getMessage());
                                 if(e.getMessage().equals("invalid session token")){
                                     sessionError(e.getMessage());

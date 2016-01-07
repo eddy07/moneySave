@@ -3,6 +3,7 @@ package com.parse.app.model;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -96,5 +97,9 @@ public class Tontine extends ParseObject {
     public void setAmande(String amande){ put("gerer_amande", amande);}
 
     public String getAmande(){return getString("gerer_amande");}
+
+    public ParseQuery<Tontine> getQuery(){
+        return ParseQuery.getQuery(Tontine.class);
+    }
 
 }

@@ -57,6 +57,7 @@ public class LoginActivity extends ActionBarActivity {
     private SnackBar snackbar;
     private TextView tv;
     private Activity activity;
+    private ParseUser thisuser;
     public static int TYPE_NOT_CONNECTED = 0;
     private ProgressWheel progressWheel;
     private AlertDialog alertDialog;
@@ -65,6 +66,10 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        thisuser = ParseUser.getCurrentUser();
+        if(thisuser!=null){
+            startActivity(new Intent(this,MainActivity.class));
+        }
         context = this;
         alertDialog = UIUtils.getProgressDialog(this, R.layout.progress_dialog_loggin);
         getSupportActionBar().hide();

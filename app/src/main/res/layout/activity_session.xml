@@ -4,7 +4,6 @@
     android:id="@+id/swipe_container_broadcast"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?android:actionBarSize"
     android:background="@drawable/background">
 
     <FrameLayout
@@ -14,6 +13,7 @@
         <ListView android:id="@+id/listviewSession"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:stackFromBottom="false"
             android:animateLayoutChanges="false"/>
 

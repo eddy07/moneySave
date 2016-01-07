@@ -2,6 +2,7 @@ package com.parse.app.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -20,4 +21,7 @@ public class Presence extends ParseObject{
     public String getDate(){return getString("date");}
     public Integer getMontantCotise(){return getInt("montant");}
     public void setMontantCotise(Integer montantCotise){put("montant",montantCotise);}
+    public ParseQuery<Presence> getQuery(){
+        return ParseQuery.getQuery(Presence.class);
+    }
 }

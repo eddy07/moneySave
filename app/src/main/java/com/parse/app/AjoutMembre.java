@@ -1,6 +1,7 @@
 package com.parse.app;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +10,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import com.gc.materialdesign.widgets.SnackBar;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -24,6 +27,7 @@ import com.parse.SendCallback;
 import com.parse.app.model.Membre;
 import com.parse.app.model.Tontine;
 import com.parse.app.utilities.NetworkUtil;
+import com.parse.app.utilities.UIUtils;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -37,17 +41,20 @@ public class AjoutMembre extends ActionBarActivity {
     private List<String> membres = new ArrayList<String>();
     private String tontineId;
     public static final int TYPE_NOT_CONNECTED= 0;
-    private ProgressDialog progressDialog;
     private Tontine thistontine;
+    private SnackBar snackBar;
     private ParseUser thisuser;
     private String date;
+    private String nom;
     private Context context;
+    private AlertDialog alertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajout_membre);
         context = this;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        alertDialog = UIUtils.getProgressDialog(this, R.layout.progress_dialog_adding);
         getSupportActionBar().setTitle("Ajouter un membre");
         mMembre = (AutoCompleteTextView) findViewById(R.id.membre);
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
@@ -55,41 +62,18 @@ public class AjoutMembre extends ActionBarActivity {
         date = DateFormat.getDateTimeInstance().format(new Date());
 
         if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
-            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+            noInternet();
         } else {
             ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
             tontineQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
                     if (e == null) {
-                        /*thistontine = tontine;
-                        ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
-                        membreQuery.whereEqualTo("tontine", tontine);
-                        membreQuery.findInBackground(new FindCallback<Membre>() {
-                            @Override
-                            public void done(List<Membre> membreList, ParseException e) {
-                                if ((e == null) && (membreList.size() >= 0)) {
-                                    ParseQuery<ParseUser> userParseQuery = ParseQuery.getQuery(ParseUser.class);
-                                    userParseQuery.whereNotContainedIn("objectId", membreList);
-                                    userParseQuery.findInBackground(new FindCallback<ParseUser>() {
-                                        @Override
-                                        public void done(List<ParseUser> users, ParseException e) {
-                                            if (e == null) {
-                                                for (ParseUser user : users) {
-                                                    //membreList.add(membre.getAdherant());
-                                                    membres.add(user.getUsername());
-                                                }
-                                            } else {
-                                                Log.d("users", "empty");
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });*/
                         thistontine = tontine;
-                        ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
+                        //Membre membre = new Membre();
+                        ParseQuery<Membre> membreQuery = (new Membre()).getQuery();
                         membreQuery.whereNotEqualTo("tontine", tontine);
+                        membreQuery.fromLocalDatastore();
                         membreQuery.findInBackground(new FindCallback<Membre>() {
                             @Override
                             public void done(List<Membre> membreList, ParseException e) {
@@ -98,9 +82,8 @@ public class AjoutMembre extends ActionBarActivity {
                                         ParseUser user = membre.getAdherant();
                                         user.fetchIfNeededInBackground(new GetCallback<ParseUser>() {
                                             @Override
-                                            public void done(ParseUser parseObject, ParseException e) {
-
-                                                membres.add(parseObject.getUsername());
+                                            public void done(ParseUser parseUser, ParseException e) {
+                                                membres.add(parseUser.getUsername());
                                             }
                                         });
 
@@ -116,7 +99,7 @@ public class AjoutMembre extends ActionBarActivity {
 
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, membres);
             mMembre.setAdapter(adapter);
-            mMembre.setThreshold(1);
+            //mMembre.setThreshold(1);
 
 
     }
@@ -154,9 +137,10 @@ public class AjoutMembre extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        Intent i = new Intent(this, ListMembreActivity.class);
+        Intent i = new Intent(this, MainTontineActivity.class);
         if(tontineId!=null) {
             i.putExtra("TONTINE_ID", tontineId);
+            i.putExtra("NOM", thistontine.getNom());
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(
@@ -173,70 +157,88 @@ public class AjoutMembre extends ActionBarActivity {
             Toast.makeText(this,"Oups... internet error. please retry!", Toast.LENGTH_LONG).show();
         }
     }
-    public void initprogress(){
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("En cours de création ...");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+    public void noInternet(){
+        snackBar = new SnackBar(this,getResources().getString(R.string.no_internet), "Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackBar.dismiss();
+            }
+        });
+        snackBar.show();
     }
     public void ajoutmembreService(){
         final String user = mMembre.getText().toString();
         final Membre membre = new Membre();
         if(!user.isEmpty()) {
             if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
-                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+                noInternet();
             } else {
-                initprogress();
-                ParseQuery<ParseUser> userParseQuery = ParseQuery.getQuery(ParseUser.class);
-                userParseQuery.whereEqualTo("username", user);
-                userParseQuery.getFirstInBackground(new GetCallback<ParseUser>() {
+                alertDialog.show();
+                ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
+                tontineParseQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
                     @Override
-                    public void done(final ParseUser parseUser, ParseException e) {
-                        if (e == null) {
-
-                            membre.setDateInscription(date);
-                            membre.setAdherant(parseUser);
-                            membre.setResponsable(thisuser);
-                            membre.setTontine(thistontine);
-                            membre.pinInBackground();
-                            membre.saveInBackground(new SaveCallback() {
+                    public void done(final Tontine tontine, ParseException e) {
+                        if(e==null){
+                            ParseQuery<ParseUser> parseUserParseQuery = ParseQuery.getQuery(ParseUser.class);
+                            parseUserParseQuery.whereEqualTo("username",user);
+                            parseUserParseQuery.getFirstInBackground(new GetCallback<ParseUser>() {
                                 @Override
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        thistontine.increment("nbMembre");
-                                        thistontine.saveInBackground();
-                                        ParsePush push = new ParsePush();
-                                        push.setChannel("idjangui"+parseUser.getObjectId());
-                                        push.setMessage(thisuser.getUsername() + " vous a ajouté à sa tontine : " + thistontine.getNom());
-                                        push.sendInBackground(new SendCallback() {
+                                public void done(final ParseUser parseUser, ParseException e) {
+                                    if(e==null){
+                                        ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                                        membreParseQuery.whereEqualTo("tontine",tontine);
+                                        membreParseQuery.whereEqualTo("adherant",parseUser);
+                                        membreParseQuery.getFirstInBackground(new GetCallback<Membre>() {
                                             @Override
-                                            public void done(ParseException e) {
+                                            public void done(Membre membre, ParseException e) {
                                                 if(e==null){
-                                                    Log.d("push","user is aweard!");
+                                                    alertDialog.dismiss();
+                                                    Toast.makeText(getApplicationContext(),"Membre existant!",Toast.LENGTH_LONG).show();
                                                 }else{
-                                                    Log.d("push","error " + e.getMessage());
+                                                    membre.setDateInscription(date);
+                                                    membre.setAdherant(parseUser);
+                                                    membre.setResponsable(thisuser);
+                                                    membre.setTontine(thistontine);
+                                                    membre.pinInBackground();
+                                                    membre.saveInBackground(new SaveCallback() {
+                                                        @Override
+                                                        public void done(ParseException e) {
+                                                            if (e == null) {
+                                                                thistontine.increment("nbMembre");
+                                                                thistontine.saveInBackground();
+                                                                ParsePush push = new ParsePush();
+                                                                push.setChannel("idjangui"+parseUser.getObjectId());
+                                                                push.setMessage(thisuser.getUsername() + " vous a ajouté à sa tontine : " + thistontine.getNom());
+                                                                push.sendInBackground(new SendCallback() {
+                                                                    @Override
+                                                                    public void done(ParseException e) {
+                                                                        if(e==null){
+                                                                            Log.d("push","user is aweard!");
+                                                                        }else{
+                                                                            Log.d("push","error " + e.getMessage());
+                                                                        }
+                                                                    }
+                                                                });
+                                                                alertDialog.dismiss();
+                                                                onBackPressed();
+                                                            } else {
+                                                                Log.d("Save Membre", "Fail to add new membre");
+                                                                alertDialog.dismiss();
+                                                                Toast.makeText(context, "Erreur lors de l'ajout", Toast.LENGTH_LONG).show();
+
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });
-                                        progressDialog.dismiss();
-                                        onBackPressed();
-                                    } else {
-                                        Log.d("Save Membre", "Fail to add new membre");
-                                        progressDialog.dismiss();
-                                        Toast.makeText(context, "Erreur lors de l'ajout", Toast.LENGTH_LONG).show();
-
                                     }
                                 }
                             });
-                        } else {
-                            Log.d("Save adherant", "Fail");
-                            progressDialog.dismiss();
-                            Toast.makeText(context, "Erreur lors de l'ajout " + e.getMessage(), Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });
-
             }
 
         }else{
