@@ -14,6 +14,7 @@ public interface IdjanguiProxy {
      * @throws IdjanguiProxyException
      */
     public String sendPush(String userId,String channel, String alert, String title) throws IdjanguiProxyException;
+    public String getDateNow() throws IdjanguiProxyException;
 
 
 

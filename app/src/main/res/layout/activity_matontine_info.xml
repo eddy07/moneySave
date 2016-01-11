@@ -1,0 +1,306 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="?android:actionBarSize"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background">
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="0dp">
+
+    <LinearLayout
+        android:id="@+id/blockName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/frame">
+        <TextView
+            android:id="@+id/labelNom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nom de la Tontine"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:padding="15dp"
+            android:textColor="@color/app_color"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/evernote_button_pressed">
+
+            </View>
+        <TextView
+            android:id="@+id/nomtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/evernote_footer_text"
+            android:textSize="13dp"
+            android:padding="15dp"/>
+
+    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/blockMontant"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelMontant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Montant cotisation"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:id="@+id/montanttext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/blocktype"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Type"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:id="@+id/typetext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/blockAmande"
+                android:layout_below="@+id/blockville"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelAmande"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gere les amandes?"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:id="@+id/amandetext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/blockJourTontine"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelJour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Jour de tontine"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+
+                <TextView
+                    android:id="@+id/jour_tontinetext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/blockDescription"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:id="@+id/descriptiontext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/blockPresident"
+                android:layout_below="@+id/blockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/frame">
+                <TextView
+                    android:id="@+id/labelPresident"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="President"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:padding="15dp"
+                    android:textColor="@color/app_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/evernote_button_pressed">
+
+                </View>
+                <TextView
+                    android:id="@+id/presidenttext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/evernote_footer_text"
+                    android:textSize="13dp"
+                    android:padding="15dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/blockActivate"
+        android:layout_below="@+id/scroll"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/frameactiv">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tontine non activé !"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:padding="15dp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="La tontine ne peut etre activée que si le nombre de membre est supérieur à 1."
+            android:textSize="13dp"
+            android:paddingLeft="15dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/white"/>
+        <LinearLayout
+            android:id="@+id/layoutActivate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="activer la tontine maintenant?"
+                android:textSize="13dp"
+                android:paddingLeft="15dp"
+                android:textColor="@color/white"/>
+            <TextView
+                android:id="@+id/oui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-20dp"
+                android:layout_marginLeft="200dp"
+                android:background="@drawable/bg_activate"
+                android:textColor="@color/gris"
+                android:textStyle="bold"
+                android:layout_marginBottom="15dp"
+                android:padding="5dp"
+                android:text="Oui"/>
+            <TextView
+                android:id="@+id/non"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-42.7dp"
+                android:layout_marginLeft="250dp"
+                android:background="@drawable/bg_activate"
+                android:textColor="@color/gris"
+                android:textStyle="bold"
+                android:layout_marginBottom="15dp"
+                android:padding="5dp"
+                android:text="Non"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

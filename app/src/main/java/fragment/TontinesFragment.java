@@ -68,73 +68,86 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
         super.onSaveInstanceState(outState);
     }
 
-    public void loadTontinesFromLocalDataStore(){
+    public void loadTontinesFromLocalDataStore(ParseUser user){
         Log.d("Loading Tontines", " From LocalDataStore");
-        ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
-        membreParseQuery.whereEqualTo("adherant", thisuser);
+        final ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+        membreParseQuery.whereEqualTo("adherant", user);
         membreParseQuery.fromLocalDatastore();
         membreParseQuery.findInBackground(new FindCallback<Membre>() {
             @Override
             public void done(List<Membre> membres, ParseException e) {
 
-                if (e == null && membres.size() > 0) {
-                    int nbMembre = membres.size();
-                    String[] tontineId = {};
-
-                    for (int i = 0; i < nbMembre; i++) {
-                        tontineId[i] = membres.get(i).getTontine().getObjectId();
+                if (e == null) {
+                    String[] tontineIdList = new String[membres.size()];
+                    for(int i=0;i<membres.size();i++){
+                        tontineIdList[i] = membres.get(i).getTontine().getObjectId().toString();
                     }
-                    List<String> idList = new ArrayList<String>();
                     ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
-                    for (int i = 0; i < tontineId.length; i++) {
-                        //tontineParseQuery.whereNotEqualTo("objectId", tontineId[i]);
-                        idList.add(tontineId[i]);
-                    }
                     tontineParseQuery.fromLocalDatastore();
-                    tontineParseQuery.whereNotContainedIn("objectId", idList);
+                    tontineParseQuery.whereNotContainedIn("objectId", Arrays.asList(tontineIdList));
+                    tontineParseQuery.setLimit(20);
                     tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
                         @Override
                         public void done(List<Tontine> tontines, ParseException e) {
-                            if (e == null) {
-                                mItems = tontines;
-                                if (mItems.size() > 0) {
+                            if(e==null){
+                                if(tontines.size()>0){
+                                    mItems = tontines;
                                     progressWheel.setVisibility(View.GONE);
                                     textNoTontine.setVisibility(View.GONE);
                                     listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
-                                } else if (mItems.size() == 0) {
-                                    TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
-                                    ta.clear();
-                                    progressWheel.setVisibility(View.GONE);
-                                    listview.setAdapter(ta);
-                                    ta.notifyDataSetChanged();
-                                    System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
-                                    textNoTontine.setVisibility(View.VISIBLE);
+                                }else{
+                                    ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                                    tontineParseQuery.setLimit(20);
+                                    tontineParseQuery.fromLocalDatastore();
+                                    tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+                                        @Override
+                                        public void done(List<Tontine> tontines, ParseException e) {
+                                            if (e == null) {
+                                                mItems = tontines;
+                                                if (mItems.size() > 0) {
+                                                    progressWheel.setVisibility(View.GONE);
+                                                    textNoTontine.setVisibility(View.GONE);
+                                                    listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
+                                                } else {
+                                                    progressWheel.setVisibility(View.GONE);
+                                                    TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+                                                    ta.clear();
+                                                    listview.setAdapter(ta);
+                                                    ta.notifyDataSetChanged();
+                                                    textNoTontine.setVisibility(View.VISIBLE);
+                                                    System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+
+                                                }
+                                            } else {
+                                                Log.d("2nd step Tontines", "Not found with error : " + e.getMessage());
+                                                progressWheel.setVisibility(View.GONE);
+                                                textNoTontine.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    });
                                 }
-                                swipeLayout.setRefreshing(false);
-                            } else {
-                                Log.d("Tontines", "Not found");
-                                swipeLayout.setRefreshing(false);
+
+                            }else{
+                                Log.d("Tontines", "Not found with error : " + e.getMessage());
                                 progressWheel.setVisibility(View.GONE);
                                 textNoTontine.setVisibility(View.VISIBLE);
                             }
                         }
                     });
                 }else{
-                    Log.d("Membres", "empty");
-                    swipeLayout.setRefreshing(false);
+                    Log.d("Membres", "not found with error : " + e.getMessage());
                     progressWheel.setVisibility(View.GONE);
                     textNoTontine.setVisibility(View.VISIBLE);
                 }
             }
         });
-
     }
 
     public void loadTontines(ParseUser user){
         if(NetworkUtil.getConnectivityStatus(getActivity().getApplicationContext())==0) {
-            //loadTontinesFromLocalDataStore();
-            swipeLayout.setRefreshing(false);
-            snackBar();
+            loadTontinesFromLocalDataStore(user);
+            //snackBar();
+            //noConnected();
         }else {
             Log.d("Loading All Tontines", " From Parse Server");
             final ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
@@ -144,12 +157,9 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
                 public void done(List<Membre> membres, ParseException e) {
 
                     if (e == null) {
-                        String[] tontineIdList = new String[1000];
-                        int i=0;
-                        for (Membre membre : membres) {
-                            tontineIdList[i] = membre.getTontine().getObjectId().toString();
-                            i++;
-
+                        String[] tontineIdList = new String[membres.size()];
+                        for(int i=0;i<membres.size();i++){
+                            tontineIdList[i] = membres.get(i).getTontine().getObjectId().toString();
                         }
                         ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
                         tontineParseQuery.whereNotContainedIn("objectId", Arrays.asList(tontineIdList));
@@ -271,7 +281,6 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                                     }
                                                 } else {
                                                     Log.d("2nd step Tontines", "Not found with error : " + e.getMessage());
-                                                    swipeLayout.setRefreshing(false);
                                                     progressWheel.setVisibility(View.GONE);
                                                     textNoTontine.setVisibility(View.VISIBLE);
                                                 }
@@ -282,7 +291,6 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                                 }else{
                                     Log.d("Tontines", "Not found with error : " + e.getMessage());
-                                    swipeLayout.setRefreshing(false);
                                     progressWheel.setVisibility(View.GONE);
                                     textNoTontine.setVisibility(View.VISIBLE);
                                     swipeLayout.setRefreshing(false);
@@ -291,7 +299,6 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
                         });
                     }else{
                         Log.d("Membres", "not found with error : " + e.getMessage());
-                        swipeLayout.setRefreshing(false);
                         progressWheel.setVisibility(View.GONE);
                         textNoTontine.setVisibility(View.VISIBLE);
                         swipeLayout.setRefreshing(false);
@@ -308,6 +315,15 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
                     snackBar.dismiss();
                 }
             });
+        snackBar.show();
+    }
+    public void noConnected(){
+        snackBar = new SnackBar(getActivity(), getActivity().getResources().getString(R.string.no_connected), "Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackBar.dismiss();
+            }
+        });
         snackBar.show();
     }
     @Override

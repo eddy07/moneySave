@@ -43,16 +43,8 @@ public class MembreProfile extends ActionBarActivity{
         poste = getIntent().getExtras().getString("POSTE");
         email = getIntent().getExtras().getString("EMAIL");
         pseudo = getIntent().getExtras().getString("PSEUDO");
+        name = getIntent().getExtras().getString("NAME");
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
-        ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
-        tontineParseQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
-            @Override
-            public void done(Tontine tontine, ParseException e) {
-                if(e==null){
-                    name= tontine.getNom();
-                }
-            }
-        });
         nomtv = (TextView)findViewById(R.id.nom);
         teltv = (TextView)findViewById(R.id.tel);
         professiontv = (TextView)findViewById(R.id.profession);

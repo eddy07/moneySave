@@ -57,7 +57,7 @@ public class CreerAnnonceActivity extends ActionBarActivity {
     private TextView mNom, mFonction;
     private AlertDialog alertDialog;
     private ProgressWheel progressWheel;
-    //private List<ParseUser> listeUsers = new ArrayList<ParseUser>();
+    private String nom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +72,7 @@ public class CreerAnnonceActivity extends ActionBarActivity {
         mFonction = (TextView)findViewById(R.id.fonction);
         create = (ImageButton)findViewById(R.id.create);
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
-        //Toast.makeText(this,"tontine Id = " + tontineId,Toast.LENGTH_LONG).show();
+        nom = getIntent().getExtras().getString("NOM");
         thisuser = ParseUser.getCurrentUser();
         mNom.setText(thisuser.getString("nom").concat(" ").concat(thisuser.getString("prenom")));
         //getEmailOfMembre(tontineId);
@@ -100,27 +100,9 @@ public class CreerAnnonceActivity extends ActionBarActivity {
         final Intent i = new Intent(this, MainTontineActivity.class);
         if(tontineId != null) {
             i.putExtra("TONTINE_ID", tontineId);
-            ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
-            tontineParseQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
-                @Override
-                public void done(Tontine tontine, ParseException e) {
-                    if(e==null){
-                        i.putExtra("NOM", tontine.getNom());
-                    }
-                }
-            });
-            if (android.os.Build.VERSION.SDK_INT >= 16) {
-                Bundle bndlanimation =
-                        ActivityOptions.makeCustomAnimation(
-                                this,
-                                R.anim.anim_right_left,
-                                R.anim.zoom_exit).toBundle();
-                startActivity(i, bndlanimation);
-                finish();
-            } else {
-                startActivity(i);
-                finish();
-            }
+            i.putExtra("NOM",nom);
+            startActivity(i);
+            finish();
         }else{
             snackBar(false, "noInternet");
         }

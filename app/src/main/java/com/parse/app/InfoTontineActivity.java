@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import com.melnykov.fab.FloatingActionButton;
 import com.gc.materialdesign.widgets.SnackBar;
@@ -149,8 +150,8 @@ public class InfoTontineActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 if (NetworkUtil.getConnectivityStatus(context) == TYPE_NOT_CONNECTED) {
-                    //Toast.makeText(context, R.string.no_internet, Toast.LENGTH_SHORT).show();
-                    snackBar(false, "noInternet");
+                    Toast.makeText(context, R.string.no_connected, Toast.LENGTH_SHORT).show();
+                    //snackBar(false, "noInternet");
                 } else {
                     //Toast.makeText(context, "tontineId = " + tontineId, Toast.LENGTH_SHORT).show();
                     alertDialog.show();

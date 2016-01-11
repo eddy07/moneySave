@@ -120,6 +120,7 @@ public class CreerTontine2 extends ActionBarActivity implements View.OnClickList
                     tontine.setType(type);
                     tontine.setAmande(amande);
                     tontine.setSessionStatu("close");
+                    tontine.setIsActivated(false);
                     tontine.setPresident(thisuser);
                     tontine.setCreation_date(date);
                     tontine.pinInBackground();

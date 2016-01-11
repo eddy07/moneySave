@@ -36,7 +36,6 @@ import com.parse.app.InfoTontineActivity;
 import com.parse.app.MainTontineActivity;
 import com.parse.app.R;
 import com.parse.app.SessionActivity;
-import com.parse.app.TontineActivity;
 import com.parse.app.adapter.MesTontinesAdapter;
 import com.parse.app.model.Compte;
 import com.parse.app.model.Cotisation;
@@ -90,7 +89,7 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
         View rootView = inflater.inflate(R.layout.fragment_mestontines,container, false);
         listview = (ListView) rootView.findViewById(R.id.listviewTontine);
         progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
-        adapter = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems);
+        adapter = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity());
         /*addButton = (ButtonFloat)rootView.findViewById(R.id.addBtn);
         addButton.setDrawableIcon(getResources().getDrawable(R.drawable.add_fab));*/
         final FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
@@ -206,7 +205,6 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                 Tontine tontine = mItems.get(position);
                 Intent i = new Intent(getActivity().getApplicationContext(), MainTontineActivity.class);
                 if(tontine.getObjectId()!=null) {
-                    //Toast.makeText(getActivity().getApplicationContext(), "TontineIDClick = " + tontine.getObjectId(), Toast.LENGTH_SHORT).show();
                     i.putExtra("TONTINE_ID", tontine.getObjectId());
                     i.putExtra("NOM", tontine.getNom());
                     if (android.os.Build.VERSION.SDK_INT >= 16) {
@@ -323,6 +321,15 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
             });
         snackBar.show();
     }
+    public void noConnected(){
+        snackBar = new SnackBar(getActivity(), getResources().getString(R.string.no_connected), "Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackBar.dismiss();
+            }
+        });
+        snackBar.show();
+    }
     public void loadMesTontinesFromLocalDataStore(){
         Log.d("Loading mesTontines", " From loacalDataStore");
         ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
@@ -340,23 +347,24 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                     if(mItems.size()>0) {
                         textNoMesTontine.setVisibility(View.GONE);
                         progressWheel.setVisibility(View.GONE);
-                        listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems));
+                        listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity()));
+
                     }
                     else if (mItems.size()==0) {
-                        MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems);
+                        MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity());
                         ta.clear();
                         progressWheel.setVisibility(View.GONE);
                         listview.setAdapter(ta);
                         ta.notifyDataSetChanged();
                         System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
                         textNoMesTontine.setVisibility(View.VISIBLE);
+
                     }
-                    swipeLayout.setRefreshing(false);
                 }else{
                     Log.d("Membre","not found");
                     progressWheel.setVisibility(View.GONE);
                     textNoMesTontine.setVisibility(View.VISIBLE);
-                    swipeLayout.setRefreshing(false);
+
                 }
 
             }
@@ -364,14 +372,13 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
     }
     public void loadMesTontines(){
         if (NetworkUtil.getConnectivityStatus(getActivity().getApplicationContext()) == 0) {
-            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
-            swipeLayout.setRefreshing(false);
-            snackBar();
-            //loadMesTontinesFromLocalDataStore();
+            //swipeLayout.setRefreshing(false);
+            //snackBar();
+            loadMesTontinesFromLocalDataStore();
         } else {
-            pinDataInLocalDataStore();
+            //pinDataInLocalDataStore();
             Log.d("Loading mesTontines", " From Parse Server");
-            ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+            ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
             membreParseQuery.whereEqualTo("adherant",user);
             membreParseQuery.findInBackground(new FindCallback<Membre>() {
                 @Override
@@ -385,11 +392,11 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                         if(mItems.size()>0) {
                             textNoMesTontine.setVisibility(View.GONE);
                             progressWheel.setVisibility(View.GONE);
-                            listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems));
+                            listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity()));
 
                         }
                         else if (mItems.size()==0) {
-                            MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems);
+                            MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity());
                             ta.clear();
                             progressWheel.setVisibility(View.GONE);
                             listview.setAdapter(ta);
@@ -398,12 +405,10 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                             textNoMesTontine.setVisibility(View.VISIBLE);
 
                         }
-                        swipeLayout.setRefreshing(false);
                     }else{
                         Log.d("Membre","not found");
                         progressWheel.setVisibility(View.GONE);
                         textNoMesTontine.setVisibility(View.VISIBLE);
-                        swipeLayout.setRefreshing(false);
 
                     }
 
@@ -417,7 +422,8 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
         if (NetworkUtil.getConnectivityStatus(getActivity().getApplicationContext()) == 0) {
             //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
             swipeLayout.setRefreshing(false);
-            snackBar();
+            //snackBar();
+            noConnected();
             //loadMesTontinesFromLocalDataStore();
         } else {
            // pinDataInLocalDataStore();
@@ -434,11 +440,11 @@ public class MesTontinesFragment extends Fragment implements SwipeRefreshLayout.
                         }
                         mItems = membreTontines;
                         if(mItems.size()>0) {
-                            listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems));
+                            listview.setAdapter(new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity()));
 
                         }
                         else if (mItems.size()==0) {
-                            MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems);
+                            MesTontinesAdapter ta = new MesTontinesAdapter(getActivity().getApplicationContext(), mItems,getActivity());
                             ta.clear();
                             listview.setAdapter(ta);
                             ta.notifyDataSetChanged();

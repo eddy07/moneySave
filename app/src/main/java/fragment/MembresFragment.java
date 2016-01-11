@@ -1,6 +1,7 @@
 package fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.method.CharacterPickerDialog;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +24,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
@@ -32,12 +38,14 @@ import com.gc.materialdesign.widgets.SnackBar;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.melnykov.fab.ScrollDirectionListener;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.app.AjoutMembre;
 import com.parse.app.CreerAnnonceActivity;
 import com.parse.app.MainActivity;
@@ -50,10 +58,13 @@ import com.parse.app.model.Tontine;
 import com.parse.app.model.Presence;
 import com.parse.app.model.Session;
 import com.parse.app.utilities.NetworkUtil;
+import com.parse.app.utilities.UIUtils;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.drakeet.materialdialog.MaterialDialog;
 
 public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 	private List<Membre> membres = new ArrayList<Membre>();
@@ -61,14 +72,16 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private MembreListAdapter adapter;
     private int mPreviousVisibleItem;
     private FloatingActionButton fab1;
+    private MaterialDialog materialDialog;
     private FloatingActionButton fab2;
     private FloatingActionButton fab3;
     private FloatingActionButton fabMenu;
+    private AlertDialog alertDialogSupp,alertDialogEncours;
     private SwipeRefreshLayout swipeLayout;
     private boolean reachedTop = true;
     private String tontineId;
     private Activity a;
-    private TextView textNoMembre;
+    private TextView textNoMembre, suppBtn;
     private String nom;
     private Context context;
     public static final int TYPE_NOT_CONNECTED = 0;
@@ -76,12 +89,17 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ParseUser thisuser;
     private Tontine tontine;
     private Session tontineSession;
+    private FloatingActionMenu menu;
     private SnackBar snackBar;
+    private FrameLayout frameLayout;
+    private TextView nbMembre;
     private ParseUser user;
+    private ParseUser president;
 
-    public MembresFragment(String tontineId){
+    public MembresFragment(String tontineId, String nom){
 
         this.tontineId = tontineId;
+        this.nom = nom;
     }
     @Override
     public void onDestroy() {
@@ -109,74 +127,44 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         snackBar.show();
     }
-    public void loadMembresFromLocalDataStore(){
-        ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery("Tontine");
-        tontineQuery.whereEqualTo("objectId", tontineId);
-        tontineQuery.fromLocalDatastore();
-        tontineQuery.getFirstInBackground(new GetCallback<Tontine>() {
-            @Override
-            public void done(Tontine tontine, ParseException e) {
-                if((e == null) && (tontine != null)){
-                    nom = tontine.getNom();
-                    ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
-                    membreQuery.whereEqualTo("tontine", tontine);
-                    membreQuery.orderByAscending("date_inscription");
-                    membreQuery.fromLocalDatastore();
-                    membreQuery.whereNotEqualTo("adherant", thisuser);
-                    membreQuery.findInBackground(new FindCallback<Membre>() {
-                        @Override
-                        public void done(List<Membre> membreList, ParseException e) {
-                            if(( e == null) && (membreList.size()>=0)){
-                                membres = membreList;
-                                if(membres.size() == 0){
-                                    MembreListAdapter sa = new MembreListAdapter(tontineId, context,a, membres);
-                                    sa.clear();
-                                    listView.setAdapter(sa);
-                                    sa.notifyDataSetChanged();
-                                    System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
-                                    progressWheel.setVisibility(View.GONE);
-                                    textNoMembre.setVisibility(View.VISIBLE);
-
-                                }else{
-                                    progressWheel.setVisibility(View.GONE);
-                                    textNoMembre.setVisibility(View.GONE);
-                                    listView.setAdapter(new MembreListAdapter(tontineId, context,a, membres));
-                                }
-                                swipeLayout.setRefreshing(false);
-                            }else{
-                                Log.d("Membre", "error "+ e.getMessage());
-                                progressWheel.setVisibility(View.GONE);
-                                textNoMembre.setVisibility(View.VISIBLE);
-                                swipeLayout.setRefreshing(false);
-                            }
-                        }
-                    });
-                }else{
-                    Log.d("Tontine", "error "+ e.getMessage());
-                }
-            }
-        });
-
-    }
     public void loadMembres(){
         if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
-            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
-            snackBar();
-            swipeLayout.setRefreshing(false);
-            //loadMembresFromLocalDataStore();
+            //snackBar();
+            //swipeLayout.setRefreshing(false);
+            loadMembreFromLocalDataStore();
 
         } else {
-            //Toast.makeText(getActivity().getApplicationContext(), "TontineId = "+tontineId, Toast.LENGTH_SHORT).show();
+            Log.d("Loding membres","From parse server");
             ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
             tontineQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
 
                     if ((e == null) && (tontine != null)) {
-                        ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
+                        if(thisuser.equals(tontine.getPresident())){
+                            suppBtn.setVisibility(View.VISIBLE);
+                        }else{
+                            suppBtn.setVisibility(View.GONE);
+                        }
+                        ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                        membreParseQuery.whereEqualTo("tontine",tontine);
+                        membreParseQuery.findInBackground(new FindCallback<Membre>() {
+                            @Override
+                            public void done(List<Membre> membres, ParseException e) {
+                                if(e==null && membres.size()>0){
+                                    frameLayout.setVisibility(View.VISIBLE);
+                                    nbMembre.setText(membres.size()+" membres");
+                                }else{
+                                    frameLayout.setVisibility(View.GONE);
+                                    Log.i("Membres","Empty");
+                                }
+                            }
+                        });
+                        president = tontine.getPresident();
+                        ParseQuery<Membre> membreQuery = (new Membre()).getQuery();
                         membreQuery.whereEqualTo("tontine", tontine);
+                        membreQuery.fromLocalDatastore();
                         membreQuery.orderByAscending("date_inscription");
-                        //membreQuery.whereNotEqualTo("adherant", thisuser);
                         membreQuery.findInBackground(new FindCallback<Membre>() {
                             @Override
                             public void done(List<Membre> membreList, ParseException e) {
@@ -190,12 +178,22 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
                                         progressWheel.setVisibility(View.GONE);
                                         textNoMembre.setVisibility(View.VISIBLE);
+                                        if(president.equals(thisuser)){
+                                            menu.setVisibility(View.VISIBLE);
+                                        }else{
+                                            menu.setVisibility(View.GONE);
+                                        }
 
                                     } else {
                                         progressWheel.setVisibility(View.GONE);
                                         textNoMembre.setVisibility(View.GONE);
                                         listView.setAdapter(new MembreListAdapter(tontineId, context,a, membres));
                                         System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+                                        if(president.equals(thisuser)){
+                                            menu.setVisibility(View.VISIBLE);
+                                        }else{
+                                            menu.setVisibility(View.GONE);
+                                        }
 
                                     }
                                     swipeLayout.setRefreshing(false);
@@ -205,6 +203,11 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     textNoMembre.setVisibility(View.VISIBLE);
                                     swipeLayout.setRefreshing(false);
                                     System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
+                                    if(president.equals(thisuser)){
+                                        menu.setVisibility(View.VISIBLE);
+                                    }else{
+                                        menu.setVisibility(View.GONE);
+                                    }
 
                                 }
                             }
@@ -214,6 +217,11 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         textNoMembre.setVisibility(View.VISIBLE);
                         Log.d("Tontine", "error " + e.getMessage());
                         System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+                        if(president.equals(thisuser)){
+                            menu.setVisibility(View.VISIBLE);
+                        }else{
+                            menu.setVisibility(View.GONE);
+                        }
 
                     }
                 }
@@ -224,22 +232,40 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
-            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
             snackBar();
             swipeLayout.setRefreshing(false);
 
         } else {
-            ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
-            //tontineQuery.whereEqualTo("objectId", tontineId);
+            ParseQuery<Tontine> tontineQuery = (new Tontine()).getQuery();
             tontineQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
 
                     if((e == null) && (tontine != null)){
-                        ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
+                        if(thisuser.equals(tontine.getPresident())){
+                            suppBtn.setVisibility(View.VISIBLE);
+                        }else{
+                            suppBtn.setVisibility(View.GONE);
+                        }
+                        ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                        membreParseQuery.whereEqualTo("tontine",tontine);
+                        membreParseQuery.findInBackground(new FindCallback<Membre>() {
+                            @Override
+                            public void done(List<Membre> membres, ParseException e) {
+                                if(e==null && membres.size()>0){
+                                    frameLayout.setVisibility(View.VISIBLE);
+                                    nbMembre.setText(membres.size()+" membres");
+                                }else{
+                                    frameLayout.setVisibility(View.GONE);
+                                    Log.i("Membres","Empty");
+                                }
+                            }
+                        });
+                        president = tontine.getPresident();
+                        ParseQuery<Membre> membreQuery = (new Membre()).getQuery();
                         membreQuery.whereEqualTo("tontine", tontine);
+                        membreQuery.fromLocalDatastore();
                         membreQuery.orderByAscending("date_inscription");
-                        //membreQuery.whereNotEqualTo("adherant", thisuser);
                         membreQuery.findInBackground(new FindCallback<Membre>() {
                             @Override
                             public void done(List<Membre> membreList, ParseException e) {
@@ -252,17 +278,31 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         listView.setAdapter(sa);
                                         sa.notifyDataSetChanged();
                                         System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
+                                        if(president.equals(thisuser)){
+                                            menu.setVisibility(View.VISIBLE);
+                                        }else{
+                                            menu.setVisibility(View.GONE);
+                                        }
                                     }
-                                    System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
                                     swipeLayout.setRefreshing(false);
                                 }else{
                                     System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
                                     swipeLayout.setRefreshing(false);
+                                    if(president.equals(thisuser)){
+                                        menu.setVisibility(View.VISIBLE);
+                                    }else{
+                                        menu.setVisibility(View.GONE);
+                                    }
                                 }
                             }
                         });
                     }else{
                         System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
+                        if(president.equals(thisuser)){
+                            menu.setVisibility(View.VISIBLE);
+                        }else{
+                            menu.setVisibility(View.GONE);
+                        }
                     }
                 }
             });
@@ -274,12 +314,26 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
         setRetainInstance(true);
         View rootView = inflater.inflate(R.layout.fragment_membres,container, false);
         context = getActivity().getApplicationContext();
+        alertDialogEncours = UIUtils.getProgressDialog(getActivity(), R.layout.progress_dialog_encours);
+        alertDialogSupp = UIUtils.getProgressDialog(getActivity(), R.layout.progress_dialog_suppression);
         thisuser = ParseUser.getCurrentUser();
         a = getActivity();
         listView = (ListView) rootView.findViewById(R.id.listviewMembre);
+        suppBtn = (TextView)rootView.findViewById(R.id.suppMembresBtn);
+        suppBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteAllMembre(tontineId);
+
+            }
+        });
+        registerForContextMenu(listView);
         progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
-        final FloatingActionMenu menu = (FloatingActionMenu) rootView.findViewById(R.id.menu);
-        //final FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        frameLayout = (FrameLayout)rootView.findViewById(R.id.layoutNbMembre);
+        nbMembre = (TextView)rootView.findViewById(R.id.nb_membre);
+        frameLayout.setVisibility(View.GONE);
+        menu = (FloatingActionMenu) rootView.findViewById(R.id.menu);
+
         fab1 = (FloatingActionButton) rootView.findViewById(R.id.fab_search_membre);
         fab2 = (FloatingActionButton) rootView.findViewById(R.id.fab_message);
         fab3 = (FloatingActionButton) rootView.findViewById(R.id.fab_add_membre);
@@ -316,7 +370,6 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeLayout.setColorSchemeColors(R.color.app_color, R.color.app_color, R.color.app_color, R.color.app_color);
         swipeLayout.setEnabled(true);
         loadMembres();
-
         final GestureDetector gesture = new GestureDetector(getActivity(),
                 new GestureDetector.SimpleOnGestureListener() {
 
@@ -357,44 +410,41 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
 
         });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                ParseUser user = membres.get(position).getAdherant();
-                Intent i = new Intent(getActivity(), MembreProfile.class);
-                i.putExtra("NOM", user.getString("nom").concat(" ").concat(user.getString("prenom")));
-                i.putExtra("TEL", user.getString("phoneNumber"));
-                i.putExtra("NAME",nom);
-                i.putExtra("TONTINE_ID",tontineId);
-                i.putExtra("PROFESSION", user.getString("profession"));
-                i.putExtra("PSEUDO", user.getUsername());
-                i.putExtra("POSTE", membres.get(position).getString("fonction"));
-                i.putExtra("EMAIL", user.getEmail());
-                startActivity(i);
+            public void onItemClick(AdapterView<?> adapterView, final View view, final int position, long id) {
+                final ParseUser user = membres.get(position).getAdherant();
+                if(thisuser.equals(president)){
+                    PopupMenu popupMenu = new PopupMenu(getActivity().getApplicationContext(), view);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-            }
-        });
-        listView.setOnCreateContextMenuListener(this);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int i, long l) {
-                ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
-                tontineParseQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
-                    @Override
-                    public void done(Tontine tontine, ParseException e) {
-                        if(tontine.getPresident().equals(thisuser)){
-                            registerForContextMenu(view);
-                            PopupMenu popupMenu = new PopupMenu(getActivity().getBaseContext(), view);
-                            popupMenu.getMenuInflater().inflate(R.menu.function_popup_menu, popupMenu.getMenu());
-                            popupMenu.show();
-                            Toast.makeText(getActivity().getBaseContext(), "OK long press",
-                                    Toast.LENGTH_LONG).show();
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            // TODO Auto-generated method stub
 
+                            switch (menuItem.getItemId()) {
+                                case R.id.action_set_function:
+                                    nommerMembre(user, view);
+                                    return true;
+                                case R.id.action_delete:
+                                    deleteMembre(user);
+                                    return true;
+                                case R.id.action_profil:
+                                    startProfilActivity(user, position, membres, tontineId);
+                                    return true;
+                                default:
+                                    return getActivity().onContextItemSelected(menuItem);
+                            }
 
                         }
-                    }
-                });
-                return true;
+                    });
+                    popupMenu.show();
+                }else{
+                    startProfilActivity(user, position, membres, tontineId);
+                }
+
             }
         });
 
@@ -412,19 +462,15 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String text = "";
 
             switch (v.getId()) {
                 case R.id.fab_search_membre:
-                    text = fab1.getLabelText();
                     break;
                 case R.id.fab_message:
-                    //text = fab2.getLabelText();
                     startSendEmail(tontineId);
                     break;
                 case R.id.fab_add_membre:
-                    text = fab3.getLabelText();
-                    startAddMembre(tontineId);
+                    startAddMembre(tontineId,nom);
                     break;
             }
 
@@ -436,9 +482,292 @@ public class MembresFragment extends Fragment implements SwipeRefreshLayout.OnRe
         i.putExtra("TONTINE_ID",tontineId);
         startActivity(i);
     }
-    public void startAddMembre(String tontineId){
+    public void startAddMembre(String tontineId,String nom){
         Intent i = new Intent(getActivity(), AjoutMembre.class);
         i.putExtra("TONTINE_ID",tontineId);
+        i.putExtra("NOM", nom);
         startActivity(i);
     }
+    public void loadMembreFromLocalDataStore(){
+        Log.d("Loding membres","From localDataStore");
+        ParseQuery<Tontine> tontineQuery = (new Tontine()).getQuery();
+        tontineQuery.fromLocalDatastore();
+        tontineQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
+            @Override
+            public void done(Tontine tontine, ParseException e) {
+
+                if ((e == null) && (tontine != null)) {
+                    if(thisuser.equals(tontine.getPresident())){
+                        suppBtn.setVisibility(View.VISIBLE);
+                    }else{
+                        suppBtn.setVisibility(View.GONE);
+                    }
+                    ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                    membreParseQuery.whereEqualTo("tontine",tontine);
+                    membreParseQuery.fromLocalDatastore();
+                    membreParseQuery.findInBackground(new FindCallback<Membre>() {
+                        @Override
+                        public void done(List<Membre> membres, ParseException e) {
+                            if(e==null && membres.size()>0){
+                                frameLayout.setVisibility(View.VISIBLE);
+                                nbMembre.setText(membres.size()+" membres");
+                            }else{
+                                frameLayout.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                    ParseQuery<Membre> membreQuery = (new Membre()).getQuery();
+                    membreQuery.whereEqualTo("tontine", tontine);
+                    membreQuery.fromLocalDatastore();
+                    membreQuery.orderByAscending("date_inscription");
+                    membreQuery.findInBackground(new FindCallback<Membre>() {
+                        @Override
+                        public void done(List<Membre> membreList, ParseException e) {
+                            if ((e == null) && (membreList.size() >= 0)) {
+                                membres = membreList;
+                                if (membres.size() == 0) {
+                                    MembreListAdapter sa = new MembreListAdapter(tontineId, context,a, membres);
+                                    sa.clear();
+                                    listView.setAdapter(sa);
+                                    sa.notifyDataSetChanged();
+                                    System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+                                    progressWheel.setVisibility(View.GONE);
+                                    textNoMembre.setVisibility(View.VISIBLE);
+
+                                } else {
+                                    progressWheel.setVisibility(View.GONE);
+                                    textNoMembre.setVisibility(View.GONE);
+                                    listView.setAdapter(new MembreListAdapter(tontineId, context,a, membres));
+                                    System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+
+                                }
+                                swipeLayout.setRefreshing(false);
+                            } else {
+                                Log.d("Membre", "error " + e.getMessage());
+                                progressWheel.setVisibility(View.GONE);
+                                textNoMembre.setVisibility(View.VISIBLE);
+                                swipeLayout.setRefreshing(false);
+                                System.out.println("Nombre d'element dans l'adapter: "+listView.getAdapter().getCount());
+
+                            }
+                        }
+                    });
+                } else {
+                    progressWheel.setVisibility(View.GONE);
+                    textNoMembre.setVisibility(View.VISIBLE);
+                    Log.d("Tontine", "error " + e.getMessage());
+                    System.out.println("Nombre d'element dans l'adapter: " + listView.getAdapter().getCount());
+
+                }
+            }
+        });
+
+    }
+    public void startProfilActivity(ParseUser user, int position, List<Membre> membres, String tontineId){
+        Intent i = new Intent(getActivity(), MembreProfile.class);
+        i.putExtra("NOM", user.getString("nom").concat(" ").concat(user.getString("prenom")));
+        i.putExtra("TEL", user.getString("phoneNumber"));
+        i.putExtra("PROFESSION", user.getString("profession"));
+        i.putExtra("PSEUDO", user.getUsername());
+        i.putExtra("EMAIL", user.getEmail());
+        i.putExtra("NAME",nom);
+        i.putExtra("TONTINE_ID",tontineId);
+        i.putExtra("POSTE", membres.get(position).getString("fonction"));
+        startActivity(i);
+    }
+    public void nommerMembre(final ParseUser user, View view){
+        PopupMenu popupMenu = new PopupMenu(getActivity().getApplicationContext(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.popup_function, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                // TODO Auto-generated method stub
+
+                switch (menuItem.getItemId()) {
+                    case R.id.action_vice_president:
+                        setFunction(user, "Vice président");
+                        return true;
+                    case R.id.action_secretaire:
+                        setFunction(user, "Sécrétaire");
+                        return true;
+                    case R.id.action_tresorier:
+                        setFunction(user, "Trésorier");
+                        return true;
+                    default:
+                        return getActivity().onContextItemSelected(menuItem);
+                }
+
+            }
+        });
+        popupMenu.show();
+
+    }
+
+    public void setFunction(final ParseUser user, final String function){
+        if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
+            snackBar();
+        } else {
+            alertDialogEncours.show();
+            ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
+            tontineParseQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
+                @Override
+                public void done(Tontine tontine, ParseException e) {
+                    if(e==null){
+                       ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                        membreParseQuery.whereEqualTo("tontine",tontine);
+                        membreParseQuery.whereEqualTo("adherant", user);
+                        membreParseQuery.getFirstInBackground(new GetCallback<Membre>() {
+                            @Override
+                            public void done(Membre membre, ParseException e) {
+                                if(e==null){
+                                    membre.setFonction(function);
+                                    membre.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if(e==null){
+                                                alertDialogEncours.dismiss();
+                                                Toast.makeText(getActivity().getApplicationContext(),"Ok",Toast.LENGTH_LONG).show();
+                                            }else{
+                                                alertDialogEncours.dismiss();
+                                                Toast.makeText(getActivity().getApplicationContext(),"Erreur, veuillez rééssayer svp!",Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    alertDialogEncours.dismiss();
+                                    Log.d("Membre","not found");
+                                }
+                            }
+                        });
+                    }else{
+                        alertDialogEncours.dismiss();
+                        Log.d("Tontine","not found");
+                    }
+                }
+            });
+        }
+    }
+    public void deleteAllMembre(final String tontineId){
+        materialDialog = new MaterialDialog(getActivity());
+        materialDialog.setCanceledOnTouchOutside(true);
+        materialDialog.setTitle("Alerte : ");
+        materialDialog.setMessage("Supprimer tous les membres ?");
+        materialDialog.setNegativeButton("Non", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+            }
+        });
+        materialDialog.setPositiveButton("Oui", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+                if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
+                    snackBar();
+                } else {
+                    alertDialogSupp.show();
+                    ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
+                    tontineParseQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
+                        @Override
+                        public void done(Tontine tontine, ParseException e) {
+                            if(e==null){
+                                ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                                membreParseQuery.whereEqualTo("tontine",tontine);
+                                membreParseQuery.whereNotEqualTo("adherant",thisuser);
+                                membreParseQuery.findInBackground(new FindCallback<Membre>() {
+                                    @Override
+                                    public void done(List<Membre> m, ParseException e) {
+                                        Log.i("membres size",""+m.size());
+                                        if(e==null && m.size()>0){
+                                            MembreListAdapter membreAdapter = new MembreListAdapter(tontineId,getActivity().getApplicationContext(),getActivity(),m);
+                                            membreAdapter.clear();
+                                            alertDialogSupp.dismiss();
+                                            onRefresh();
+                                        }else{
+                                            alertDialogSupp.dismiss();
+                                            Log.i("Membres","Not sufficient");
+                                            Toast.makeText(getActivity().getApplicationContext(),"Impossible de supprimer le president !",Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                });
+                            }else{
+                                alertDialogSupp.dismiss();
+                                Log.i("Tontine","Not found");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        materialDialog.show();
+
+    }
+    public void deleteMembre(final ParseUser user){
+        if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
+            snackBar();
+        } else {
+            materialDialog = new MaterialDialog(getActivity());
+            materialDialog.setCanceledOnTouchOutside(true);
+            materialDialog.setTitle("Supprimer le membre?");
+            materialDialog.setMessage(user.getString("nom") +" "+ user.getString("prenom"));
+            materialDialog.setNegativeButton("Oui", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    materialDialog.dismiss();
+                    alertDialogSupp.show();
+                    ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
+                    tontineParseQuery.getInBackground(tontineId, new GetCallback<Tontine>() {
+                        @Override
+                        public void done(Tontine tontine, ParseException e) {
+                            if (e == null) {
+                                ParseQuery<Membre> membreParseQuery = (new Membre()).getQuery();
+                                membreParseQuery.whereEqualTo("adherant", user);
+                                membreParseQuery.whereEqualTo("tontine", tontine);
+                                membreParseQuery.getFirstInBackground(new GetCallback<Membre>() {
+                                    @Override
+                                    public void done(Membre membre, ParseException e) {
+                                        if (e == null) {
+                                            membre.deleteInBackground(new DeleteCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if (e == null) {
+                                                        alertDialogSupp.dismiss();
+                                                        Toast.makeText(getActivity(),"Membre supprimé !",Toast.LENGTH_LONG).show();
+                                                        adapter = new MembreListAdapter(tontineId, getActivity().getApplicationContext(),a, membres);
+                                                        adapter.notifyDataSetChanged();
+                                                        onRefresh();
+                                                    }else{
+                                                        alertDialogSupp.dismiss();
+                                                        Toast.makeText(getActivity(),"Erreur de suppression !",Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+                                        }else{
+                                            alertDialogSupp.dismiss();
+                                            Toast.makeText(getActivity(),"Membre introuvable !",Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            }else{
+                                alertDialogSupp.dismiss();
+                                Toast.makeText(getActivity(),"Tontine introuvable",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            });
+            materialDialog.setPositiveButton("Non", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    materialDialog.dismiss();
+                }
+            });
+            materialDialog.show();
+
+        }
+
+    }
+
 }

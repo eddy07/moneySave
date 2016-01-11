@@ -14,11 +14,13 @@ import fragment.SessionsFragment;
 public class TabsTontinePagerAdapter extends FragmentStatePagerAdapter {
     private String tontineId;
     private String date;
-    public TabsTontinePagerAdapter(FragmentManager fm, String tontineId, String date) {
+    private String nom;
+    public TabsTontinePagerAdapter(FragmentManager fm, String nom, String tontineId, String date) {
 
         super(fm);
         this.tontineId = tontineId;
         this.date = date;
+        this.nom = nom;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class TabsTontinePagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new SessionsFragment(tontineId, date);
             case 2:
-                return new MembresFragment(tontineId);
+                return new MembresFragment(tontineId,nom);
 
         }
         return null;

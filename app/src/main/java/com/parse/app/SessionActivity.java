@@ -192,7 +192,7 @@ public class SessionActivity extends ActionBarActivity implements SwipeRefreshLa
                                 presence.setMontantCotise(0);
                                 presence.saveInBackground();
                             }
-                            Intent i = new Intent(context, TontineActivity.class);
+                            Intent i = new Intent(context, MainTontineActivity.class);
                             i.putExtra("SESSION_ID", session.getObjectId());
                             i.putExtra("TONTINE_ID", tontineId);
                             i.putExtra("DATE",session.getDateCreation());

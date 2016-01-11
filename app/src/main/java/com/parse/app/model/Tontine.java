@@ -98,6 +98,10 @@ public class Tontine extends ParseObject {
 
     public String getAmande(){return getString("gerer_amande");}
 
+    public boolean getisActivated(){return getBoolean("isActivated");}
+
+    public void setIsActivated(boolean isActivated){put("isActivated",isActivated);}
+
     public ParseQuery<Tontine> getQuery(){
         return ParseQuery.getQuery(Tontine.class);
     }

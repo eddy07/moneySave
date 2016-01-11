@@ -1,10 +1,14 @@
 package com.parse.app.proxy;
 
+import android.widget.Toast;
+
 import com.parse.ParseUser;
 import com.parse.app.proxy.utilities.HttpClientProxy;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,5 +60,15 @@ public class IdjanguiProxyImpl implements IdjanguiProxy {
         } catch (Exception ex){
             throw new IdjanguiProxyException(ex);
         }
+    }
+
+    @Override
+    public String getDateNow() throws IdjanguiProxyException {
+        Calendar calendar = Calendar.getInstance();
+        String day;
+        calendar.setTime(new Date());
+        String[]days = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
+        day = days[calendar.get(Calendar.DAY_OF_WEEK)-1];
+        return day;
     }
 }

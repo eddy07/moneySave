@@ -81,9 +81,8 @@ public class SessionsFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     public  void loadSessionsFromLocalDataStore(){
         ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery("Tontine");
-        tontineQuery.whereEqualTo("objectId", tontineId);
         tontineQuery.fromLocalDatastore();
-        tontineQuery.getFirstInBackground(new GetCallback<Tontine>() {
+        tontineQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
             @Override
             public void done(Tontine tontine, ParseException e) {
                 if((e == null) && (tontine != null)){
@@ -126,14 +125,11 @@ public class SessionsFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
     public void loadSessions(){
         if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
-            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
-            //swipeLayout.setRefreshing(false);
             //loadSessionsFromLocalDataStore();
 
         } else {
             ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery(Tontine.class);
-            tontineQuery.whereEqualTo("objectId", tontineId);
-            tontineQuery.getFirstInBackground(new GetCallback<Tontine>() {
+            tontineQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
                     if((e == null) && (tontine != null)){
@@ -178,17 +174,16 @@ public class SessionsFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         if (NetworkUtil.getConnectivityStatus(getActivity()) == TYPE_NOT_CONNECTED) {
-            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
-            snackBar();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            //snackBar();
             swipeLayout.setRefreshing(false);
 
         } else {
             ParseQuery<Tontine> tontineQuery = ParseQuery.getQuery("Tontine");
-            tontineQuery.whereEqualTo("objectId", tontineId);
-            tontineQuery.getFirstInBackground(new GetCallback<Tontine>() {
+            tontineQuery.getInBackground(tontineId,new GetCallback<Tontine>() {
                 @Override
                 public void done(Tontine tontine, ParseException e) {
-                    if((e == null) && (tontine != null)){
+                        if((e == null) && (tontine != null)){
                         ParseQuery<Session> sessionQuery = ParseQuery.getQuery("Session");
                         sessionQuery.whereEqualTo("tontine", tontine);
                         sessionQuery.addDescendingOrder("statu");

@@ -10,12 +10,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.gc.materialdesign.widgets.SnackBar;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -24,7 +26,15 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.app.adapter.TabsPagerAdapter;
 import com.parse.app.model.Compte;
+import com.parse.app.model.Session;
+import com.parse.app.model.Tontine;
+import com.parse.app.proxy.IdjanguiProxy;
+import com.parse.app.proxy.IdjanguiProxyException;
+import com.parse.app.proxy.IdjanguiProxyImpl;
 import com.parse.app.utilities.NetworkUtil;
+
+import java.util.Calendar;
+import java.util.List;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -41,6 +51,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private SnackBar snackbar;
     private Integer thiscompte;
     private MaterialDialog materialDialog;
+    private String dayOfWeek;
+    private IdjanguiProxyImpl IdjanguiProxy = IdjanguiProxyImpl.getInstance();
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +61,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         setContentView(R.layout.activity_main);
         context = this;
         user = ParseUser.getCurrentUser();
+        try {
+            dayOfWeek = IdjanguiProxy.getDateNow();
+            //Toast.makeText(this,"dateNow = " + dayOfWeek,Toast.LENGTH_LONG).show();
+        } catch (IdjanguiProxyException e) {
+            Log.d("getDateNow",e.getMessage());
+        }
+        startService();
         getCompte(user);
         if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
-            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_connected, Toast.LENGTH_SHORT).show();
         } else {
+            storeTontineInLocalDataStore();
+            storeSessionInLocalDataStore();
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
             installation.put("user", user);
             installation.saveInBackground();
@@ -92,7 +114,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
     public void getCompte(ParseUser user){
         if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
-            //Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
             getCompteFromLocalDataStore(user);
         } else {
             ParseQuery<Compte> compteParseUser = ParseQuery.getQuery(Compte.class);
@@ -257,5 +278,36 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 }
             });
         snackbar.show();
+    }
+    public void storeTontineInLocalDataStore(){
+        ParseQuery<Tontine> tontineParseQuery = (new Tontine()).getQuery();
+        tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+            @Override
+            public void done(List<Tontine> tontines, ParseException e) {
+                if(e==null){
+                    Tontine.pinAllInBackground(tontines);
+                }
+
+            }
+        });
+    }
+    public void storeSessionInLocalDataStore(){
+        ParseQuery<Session> sessionParseQuery = (new Session()).getQuery();
+        sessionParseQuery.findInBackground(new FindCallback<Session>() {
+            @Override
+            public void done(List<Session> sessions, ParseException e) {
+                if(e==null){
+                    Tontine.pinAllInBackground(sessions);
+                }
+
+            }
+        });
+    }
+
+    public void startService(){
+        startService(new Intent(this,GetDateService.class));
+    }
+    public void stopService(){
+        stopService(new Intent(this,GetDateService.class));
     }
 }

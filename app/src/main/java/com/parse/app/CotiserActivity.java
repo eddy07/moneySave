@@ -68,7 +68,7 @@ public class CotiserActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        Intent i = new Intent(this, TontineActivity.class);
+        Intent i = new Intent(this, MainTontineActivity.class);
         if((tontineId!=null)&&(sessionId!=null)&&(dateSession!=null)) {
             i.putExtra("TONTINE_ID", tontineId);
             i.putExtra("SESSION_ID", sessionId);

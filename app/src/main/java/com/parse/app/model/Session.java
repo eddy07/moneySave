@@ -67,6 +67,8 @@ public class Session extends ParseObject {
     public Integer getMontantTotal(){return getInt("montant_total");}
     public void setTour(Integer numTour){ put("tour", numTour); }
     public Integer getTour(){ return  Integer.getInteger("tour"); }
+    public void setTourIsFinal(boolean statu){ put("tourIsFinal", statu); }
+    public boolean getTourIsFinal(){ return  getBoolean("tourIsFinal"); }
     public ParseQuery<Session> getQuery(){
         return ParseQuery.getQuery(Session.class);
     }

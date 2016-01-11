@@ -27,11 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TontineActivity"
-            android:label="@string/title_activity_tontine"
-            android:theme="@style/AppTheme" >
-        </activity>
-        <activity
             android:name=".DemandeSoutientActivity"
             android:parentActivityName=".SessionActivity" >
             <meta-data
@@ -111,6 +106,14 @@
                 android:value="com.parse.app.MainActivity" />
         </activity>
         <activity
+            android:name=".MaTontineInfoActivity"
+            android:parentActivityName=".MainTontineActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.parse.app.MainTontineActivity" />
+        </activity>
+        <activity
             android:name=".SessionActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" >
@@ -136,10 +139,10 @@
         </activity>
         <activity
             android:name=".CotiserActivity"
-            android:parentActivityName=".TontineActivity" >
+            android:parentActivityName=".MainTontineActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.parse.app.TontineActivity" />
+                android:value="com.parse.app.MainTontineActivity" />
         </activity>
         <activity
             android:name=".InfoSessionActivity"
@@ -207,7 +210,6 @@
         </activity>
         <activity
             android:name=".MyProfile"
-            android:label="@string/title_activity_my_profile"
             android:parentActivityName=".SettingsActivity"
             android:theme="@style/themeprofile" >
             <meta-data
@@ -222,12 +224,10 @@
                 android:value="com.parse.app.MainActivity" />
         </activity>
         <activity
-            android:name=".CreerTontineAmande"
-            android:label="@string/title_activity_creer_tontine_amande" >
+            android:name=".CreerTontineAmande" >
         </activity>
         <activity
             android:name=".CreerTontine2"
-            android:label="@string/title_activity_creer_tontine2"
             android:theme="@style/theme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -292,8 +292,7 @@
                 android:value="com.parse.app.MainTontineActivity" />
         </activity>
         <activity
-            android:name=".CheckCahierActivity"
-            android:label="@string/title_activity_check_cahier" >
+            android:name=".CheckCahierActivity" >
         </activity>
     </application>
 

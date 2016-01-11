@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_vice_president"
+        android:title="@string/vice_president">
+    </item>
+    <item
+        android:id="@+id/action_secretaire"
+        android:title="@string/secretaire">
+    </item>
+    <item
+        android:id="@+id/action_tresorier"
+        android:title="@string/tresorier">
+    </item>
+
+</menu>

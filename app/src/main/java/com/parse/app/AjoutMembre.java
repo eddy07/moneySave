@@ -31,8 +31,10 @@ import com.parse.app.utilities.UIUtils;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 
 public class AjoutMembre extends ActionBarActivity {
@@ -58,6 +60,7 @@ public class AjoutMembre extends ActionBarActivity {
         getSupportActionBar().setTitle("Ajouter un membre");
         mMembre = (AutoCompleteTextView) findViewById(R.id.membre);
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
+        nom = getIntent().getExtras().getString("NOM");
         thisuser = ParseUser.getCurrentUser();
         date = DateFormat.getDateTimeInstance().format(new Date());
 
@@ -70,27 +73,34 @@ public class AjoutMembre extends ActionBarActivity {
                 public void done(Tontine tontine, ParseException e) {
                     if (e == null) {
                         thistontine = tontine;
-                        //Membre membre = new Membre();
                         ParseQuery<Membre> membreQuery = (new Membre()).getQuery();
-                        membreQuery.whereNotEqualTo("tontine", tontine);
+                        membreQuery.whereEqualTo("tontine", tontine);
                         membreQuery.fromLocalDatastore();
                         membreQuery.findInBackground(new FindCallback<Membre>() {
                             @Override
                             public void done(List<Membre> membreList, ParseException e) {
-                                if ((e == null) && (membreList.size() >= 0)) {
-                                    for(Membre membre : membreList){
-                                        ParseUser user = membre.getAdherant();
-                                        user.fetchIfNeededInBackground(new GetCallback<ParseUser>() {
-                                            @Override
-                                            public void done(ParseUser parseUser, ParseException e) {
-                                                membres.add(parseUser.getUsername());
-                                            }
-                                        });
-
+                                if (e == null) {
+                                    String[] idList = new String[membreList.size()];
+                                    for (int i = 0; i < membreList.size(); i++) {
+                                        idList[i] = membreList.get(i).getAdherant().getObjectId();
                                     }
+                                    ParseQuery<ParseUser> parseUserParseQuery = ParseQuery.getQuery(ParseUser.class);
+                                    parseUserParseQuery.fromLocalDatastore();
+                                    parseUserParseQuery.whereNotContainedIn("objectId", Arrays.asList(idList));
+                                    parseUserParseQuery.findInBackground(new FindCallback<ParseUser>() {
+                                        @Override
+                                        public void done(List<ParseUser> parseUsers, ParseException e) {
+                                            if (e == null) {
+                                                for (ParseUser user : parseUsers) {
+                                                    membres.add(user.getUsername());
+                                                }
+                                            }
+                                        }
+                                    });
 
                                 }
                             }
+
                         });
                     }
                 }
@@ -140,7 +150,7 @@ public class AjoutMembre extends ActionBarActivity {
         Intent i = new Intent(this, MainTontineActivity.class);
         if(tontineId!=null) {
             i.putExtra("TONTINE_ID", tontineId);
-            i.putExtra("NOM", thistontine.getNom());
+            i.putExtra("NOM", nom);
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(
@@ -195,6 +205,7 @@ public class AjoutMembre extends ActionBarActivity {
                                                     alertDialog.dismiss();
                                                     Toast.makeText(getApplicationContext(),"Membre existant!",Toast.LENGTH_LONG).show();
                                                 }else{
+                                                    membre = new Membre();
                                                     membre.setDateInscription(date);
                                                     membre.setAdherant(parseUser);
                                                     membre.setResponsable(thisuser);
@@ -206,7 +217,7 @@ public class AjoutMembre extends ActionBarActivity {
                                                             if (e == null) {
                                                                 thistontine.increment("nbMembre");
                                                                 thistontine.saveInBackground();
-                                                                ParsePush push = new ParsePush();
+                                                                /*ParsePush push = new ParsePush();
                                                                 push.setChannel("idjangui"+parseUser.getObjectId());
                                                                 push.setMessage(thisuser.getUsername() + " vous a ajouté à sa tontine : " + thistontine.getNom());
                                                                 push.sendInBackground(new SendCallback() {
@@ -218,8 +229,9 @@ public class AjoutMembre extends ActionBarActivity {
                                                                             Log.d("push","error " + e.getMessage());
                                                                         }
                                                                     }
-                                                                });
+                                                                });*/
                                                                 alertDialog.dismiss();
+                                                                Toast.makeText(getApplicationContext(),"Un membre ajouté !",Toast.LENGTH_LONG).show();
                                                                 onBackPressed();
                                                             } else {
                                                                 Log.d("Save Membre", "Fail to add new membre");
@@ -232,6 +244,9 @@ public class AjoutMembre extends ActionBarActivity {
                                                 }
                                             }
                                         });
+                                    }else{
+                                        alertDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(),"Membre inexistant !",Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
